@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
-    ArrayList<GamePaintingListener> paintListeners = new ArrayList<GamePaintingListener>();
+    ArrayList<PaintListener> paintListeners = new ArrayList<PaintListener>();
 
-    public void addPaintListener(GamePaintingListener listener) {
+    public void addPaintListener(PaintListener listener) {
         paintListeners.add(listener);
     }
 
@@ -16,8 +16,8 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (GamePaintingListener listener : paintListeners) {
-            listener.onPaintingComponent(g);
+        for (PaintListener listener : paintListeners) {
+            listener.onPaintComponent(g, getSize());
         }
     }
 }

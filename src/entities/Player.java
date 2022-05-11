@@ -1,22 +1,46 @@
 package entities;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import core.GamePaintingListener;
+import core.PaintListener;
 import misc.Vector;
 
-public class Player extends GameObject implements GamePaintingListener, KeyListener {
+public class Player implements PaintListener, KeyListener {
     private boolean[][] occupiedSquares;
+    private Vector position = new Vector(0, 0);
+    private Vector direction = new Vector(0, 0);
+    private double speed = 1;
 
     public Player() {
 
     }
 
+    public Vector getPosition() {
+        return this.position;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
+    }
+
+    public Vector getVelocity() {
+        return this.direction;
+    }
+
+    public void setVelocity(Vector velocity) {
+        this.direction = velocity;
+    }
+
+    public void update() {
+        setPosition(position.add(direction.multiply(speed)));
+    }
+
     @Override
-    public void onPaintingComponent(Graphics g) {
+    public void onPaintComponent(Graphics g, Dimension panelSize) {
         g.setColor(Color.BLUE);
         g.fillRect((int) getPosition().getX(), (int) getPosition().getY(), 100, 100);
     }
