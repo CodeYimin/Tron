@@ -35,7 +35,7 @@ public class Grid implements PaintListener {
     @Override
     public void onPaintComponent(Graphics g, Dimension panelSize) {
         int tileSize = (int) Math.min(panelSize.getWidth() / getWidth(), panelSize.getHeight() / getHeight());
-        int gridLineThickness = (int) (tileSize * gridLineThicknessPercentage);
+        int gridLineThickness = (int) Math.max(tileSize * gridLineThicknessPercentage, 1);
 
         int heightPixels = tileSize * getHeight();
         int widthPixels = tileSize * getWidth();
