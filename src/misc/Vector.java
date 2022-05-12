@@ -49,8 +49,23 @@ public class Vector {
         return new Vector(x / scalar, y / scalar);
     }
 
+    public Vector modulus(double scalar) {
+        return new Vector(x % scalar, y % scalar);
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Vector)) {
+            return false;
+        }
+        Vector vector = (Vector) o;
+        return x == vector.getX() && y == vector.getY();
     }
 }

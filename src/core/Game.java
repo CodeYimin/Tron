@@ -3,21 +3,22 @@ package core;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-import entities.Grid;
+import entities.Arena;
 import entities.Player;
 
 public class Game {
     private GameWindow window;
     private ArrayList<Player> players = new ArrayList<>();
-    private Grid map = new Grid(10, 10);
+    private Arena arena;
 
     public Game(String title, int width, int height) {
         window = new GameWindow(title, width, height);
 
-        map = new Grid(50, 50);
-        addPaintListener(map);
+        arena = new Arena(50, 50, players);
+        addPaintListener(arena);
+        addKeyListener(arena);
 
-        Player player = new Player();
+        Player player = new Player(arena);
         addPlayer(player);
 
         startLoop();
@@ -45,8 +46,6 @@ public class Game {
 
     public void addPlayer(Player player) {
         players.add(player);
-        addPaintListener(player);
-        addKeyListener(player);
     }
 
     public void addPaintListener(PaintListener paintListener) {

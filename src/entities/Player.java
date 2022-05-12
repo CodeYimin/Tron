@@ -9,14 +9,16 @@ import java.awt.event.KeyListener;
 import core.PaintListener;
 import misc.Vector;
 
-public class Player implements PaintListener, KeyListener {
+public class Player implements KeyListener, PaintListener {
+    private Arena arena;
     private boolean[][] occupiedSquares;
     private Vector position = new Vector(0, 0);
     private Vector direction = new Vector(0, 0);
-    private double speed = 1;
+    private double speed = 0.25;
 
-    public Player() {
-
+    public Player(Arena arena) {
+        this.arena = arena;
+        occupiedSquares = new boolean[arena.getWidth()][arena.getHeight()];
     }
 
     public Vector getPosition() {
@@ -27,36 +29,86 @@ public class Player implements PaintListener, KeyListener {
         this.position = position;
     }
 
-    public Vector getVelocity() {
+    public Arena getArena() {
+        return this.arena;
+    }
+
+    public void setArena(Arena arena) {
+        this.arena = arena;
+    }
+
+    public boolean[][] getOccupiedSquares() {
+        return this.occupiedSquares;
+    }
+
+    public void setOccupiedSquares(boolean[][] occupiedSquares) {
+        this.occupiedSquares = occupiedSquares;
+    }
+
+    public Vector getDirection() {
         return this.direction;
     }
 
-    public void setVelocity(Vector velocity) {
-        this.direction = velocity;
+    public void setDirection(Vector direction) {
+        this.direction = direction;
+    }
+
+    public double getSpeed() {
+        return this.speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public void update() {
-        setPosition(position.add(direction.multiply(speed)));
+        occupiedSquares[(int) position.getX()][(int) position.getY()] = true;
+        Vector newPosition = position.add(direction.multiply(speed));
+        setPosition(newPosition);
     }
 
     @Override
     public void onPaintComponent(Graphics g, Dimension panelSize) {
-        g.setColor(Color.BLUE);
-        g.fillRect((int) getPosition().getX(), (int) getPosition().getY(), 100, 100);
+        int tileSize = arena.getScreenTileSize(panelSize);
+        int offsetX = arena.getScreenOffsetX(panelSize);
+        int offsetY = arena.getScreenOffsetY(panelSize);
+
+        g.setColor(Color.RED);
+        for (int i = 0; i < occupiedSquares.length; i++) {
+            for (int j = 0; j < occupiedSquares[i].length; j++) {
+                if (occupiedSquares[i][j]) {
+                    g.fillRect(
+                            i * tileSize + offsetX,
+                            j * tileSize + offsetY,
+                            tileSize,
+                            tileSize);
+                }
+            }
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        Vector newDirection;
+
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_LEFT) {
-            setVelocity(Vector.LEFT);
+            newDirection = Vector.LEFT;
         } else if (key == KeyEvent.VK_RIGHT) {
-            setVelocity(Vector.RIGHT);
+            newDirection = Vector.RIGHT;
         } else if (key == KeyEvent.VK_UP) {
-            setVelocity(Vector.UP);
+            newDirection = Vector.UP;
         } else if (key == KeyEvent.VK_DOWN) {
-            setVelocity(Vector.DOWN);
+            newDirection = Vector.DOWN;
+        } else {
+            return;
         }
+
+        if (newDirection.equals(direction.multiply(-1))) {
+            return;
+        }
+
+        direction = newDirection;
     }
 
     @Override
