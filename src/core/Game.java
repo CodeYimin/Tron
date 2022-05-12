@@ -1,32 +1,38 @@
 package core;
 
-import java.awt.event.KeyListener;
+import java.awt.Dimension;
 import java.util.ArrayList;
 
-import entities.Arena;
-import entities.Player;
+import javax.swing.JFrame;
 
-public class Game {
-    private GameWindow window;
+import entities.Player;
+import panels.Arena;
+
+public class Game extends JFrame {
     private ArrayList<Player> players = new ArrayList<>();
     private Arena arena;
 
     public Game(String title, int width, int height) {
-        window = new GameWindow(title, width, height);
+        super(title);
 
-        arena = new Arena(50, 50, players);
-        addPaintListener(arena);
-        addKeyListener(arena);
+        // Set up the window
+        setSize(width, height);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Player player = new Player(arena);
-        addPlayer(player);
+        // Setup arena panel
+        arena = new Arena(new Dimension(100, 100), players);
+        add(arena);
 
+        setVisible(true);
+
+        // Start game loop
         startLoop();
     }
 
     private void startLoop() {
         while (true) {
-            update();
+            arena.repaint();
+            arena.update();
 
             try {
                 Thread.sleep(10);
@@ -34,25 +40,5 @@ public class Game {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void update() {
-        for (Player player : players) {
-            player.update();
-        }
-
-        window.getPanel().repaint();
-    }
-
-    public void addPlayer(Player player) {
-        players.add(player);
-    }
-
-    public void addPaintListener(PaintListener paintListener) {
-        window.getPanel().addPaintListener(paintListener);
-    }
-
-    public void addKeyListener(KeyListener keyListener) {
-        window.addKeyListener(keyListener);
     }
 }

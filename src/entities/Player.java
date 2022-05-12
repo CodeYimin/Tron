@@ -1,31 +1,30 @@
 package entities;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import core.PaintListener;
 import misc.Vector;
+import panels.Arena;
 
-public class Player implements KeyListener, PaintListener {
+public class Player implements KeyListener {
     private Arena arena;
-    private boolean[][] occupiedSquares;
-    private Vector position = new Vector(0, 0);
-    private Vector velocity = new Vector(0, 0);
+    private boolean[][] bodyPositions;
+    private Vector headPosition = new Vector(0, 0);
+    private Vector headVelocity = new Vector(0, 0);
+    private boolean frozen = false;
 
     public Player(Arena arena) {
-        this.arena = arena;
-        occupiedSquares = new boolean[arena.getWidth()][arena.getHeight()];
+        setArena(arena);
     }
 
-    public Vector getPosition() {
-        return this.position;
+    public Vector getHeadPosition() {
+        return this.headPosition;
     }
 
-    public void setPosition(Vector position) {
-        this.position = position;
+    public void setHeadPosition(Vector position) {
+        this.headPosition = position;
     }
 
     public Arena getArena() {
@@ -34,40 +33,54 @@ public class Player implements KeyListener, PaintListener {
 
     public void setArena(Arena arena) {
         this.arena = arena;
+        resetBodyPositions();
     }
 
-    public boolean[][] getOccupiedSquares() {
-        return this.occupiedSquares;
+    public boolean[][] getBodyPositions() {
+        return this.bodyPositions;
     }
 
-    public void setOccupiedSquares(boolean[][] occupiedSquares) {
-        this.occupiedSquares = occupiedSquares;
+    public Vector getHeadVelocity() {
+        return this.headVelocity;
     }
 
-    public Vector getVelocity() {
-        return this.velocity;
+    public void setHeadVelocity(Vector velocity) {
+        this.headVelocity = velocity;
     }
 
-    public void setVelocity(Vector velocity) {
-        this.velocity = velocity;
+    public void resetBodyPositions() {
+        bodyPositions = new boolean[arena.getGrid().width][arena.getGrid().height];
+    }
+
+    public void reset() {
+        headPosition = new Vector(0, 0);
+        headVelocity = new Vector(0, 0);
+        resetBodyPositions();
     }
 
     public void update() {
-        occupiedSquares[(int) position.getX()][(int) position.getY()] = true;
-        Vector newPosition = position.add(velocity);
-        setPosition(newPosition);
+        // Create new head position and check if it is in bounds
+        Vector newHeadPosition = headPosition.add(headVelocity);
+        if (!newHeadPosition.inBounds(arena.getGrid().width, arena.getGrid().height)) {
+            // Player about to go out of bounds
+            return;
+        }
+
+        // Previous head position is now part of the body
+        bodyPositions[headPosition.getX()][headPosition.getY()] = true;
+        // Update head position
+        setHeadPosition(newHeadPosition);
     }
 
-    @Override
-    public void onPaintComponent(Graphics g, Dimension panelSize) {
-        int tileSize = arena.getScreenTileSize(panelSize);
-        int offsetX = arena.getScreenOffsetX(panelSize);
-        int offsetY = arena.getScreenOffsetY(panelSize);
+    public void draw(Graphics g) {
+        int tileSize = arena.getScreenTileSize();
+        int offsetX = arena.getScreenOffsetX();
+        int offsetY = arena.getScreenOffsetY();
 
         g.setColor(Color.RED);
-        for (int i = 0; i < occupiedSquares.length; i++) {
-            for (int j = 0; j < occupiedSquares[i].length; j++) {
-                if (occupiedSquares[i][j]) {
+        for (int i = 0; i < bodyPositions.length; i++) {
+            for (int j = 0; j < bodyPositions[i].length; j++) {
+                if (bodyPositions[i][j]) {
                     g.fillRect(
                             i * tileSize + offsetX,
                             j * tileSize + offsetY,
@@ -95,11 +108,11 @@ public class Player implements KeyListener, PaintListener {
             return;
         }
 
-        if (newDirection.equals(velocity.multiply(-1))) {
+        if (newDirection.equals(headVelocity.multiply(-1))) {
             return;
         }
 
-        velocity = newDirection;
+        headVelocity = newDirection;
     }
 
     @Override
