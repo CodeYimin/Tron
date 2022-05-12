@@ -13,8 +13,7 @@ public class Player implements KeyListener, PaintListener {
     private Arena arena;
     private boolean[][] occupiedSquares;
     private Vector position = new Vector(0, 0);
-    private Vector direction = new Vector(0, 0);
-    private double speed = 0.25;
+    private Vector velocity = new Vector(0, 0);
 
     public Player(Arena arena) {
         this.arena = arena;
@@ -45,25 +44,17 @@ public class Player implements KeyListener, PaintListener {
         this.occupiedSquares = occupiedSquares;
     }
 
-    public Vector getDirection() {
-        return this.direction;
+    public Vector getVelocity() {
+        return this.velocity;
     }
 
-    public void setDirection(Vector direction) {
-        this.direction = direction;
-    }
-
-    public double getSpeed() {
-        return this.speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public void setVelocity(Vector velocity) {
+        this.velocity = velocity;
     }
 
     public void update() {
         occupiedSquares[(int) position.getX()][(int) position.getY()] = true;
-        Vector newPosition = position.add(direction.multiply(speed));
+        Vector newPosition = position.add(velocity);
         setPosition(newPosition);
     }
 
@@ -104,11 +95,11 @@ public class Player implements KeyListener, PaintListener {
             return;
         }
 
-        if (newDirection.equals(direction.multiply(-1))) {
+        if (newDirection.equals(velocity.multiply(-1))) {
             return;
         }
 
-        direction = newDirection;
+        velocity = newDirection;
     }
 
     @Override

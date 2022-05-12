@@ -1,8 +1,8 @@
 package misc;
 
 public class Vector {
-    private double x;
-    private double y;
+    private int x;
+    private int y;
 
     public static final Vector ZERO = new Vector(0, 0);
     public static final Vector ONE = new Vector(1, 1);
@@ -12,24 +12,24 @@ public class Vector {
     public static final Vector LEFT = new Vector(-1, 0);
     public static final Vector RIGHT = new Vector(1, 0);
 
-    public Vector(double x, double y) {
+    public Vector(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 
@@ -41,15 +41,15 @@ public class Vector {
         return new Vector(x - v.getX(), y - v.getY());
     }
 
-    public Vector multiply(double scalar) {
+    public Vector multiply(int scalar) {
         return new Vector(x * scalar, y * scalar);
     }
 
-    public Vector divide(double scalar) {
+    public Vector divide(int scalar) {
         return new Vector(x / scalar, y / scalar);
     }
 
-    public Vector modulus(double scalar) {
+    public Vector modulus(int scalar) {
         return new Vector(x % scalar, y % scalar);
     }
 
