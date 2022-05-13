@@ -126,29 +126,11 @@ public class Arena extends JPanel {
         super.paintComponent(g);
 
         // Draw the grid
-        int tileSize = getScreenTileSize();
-        int gridlineThickness = getScreenGridlineThickness();
-
         int offsetX = getScreenOffsetX();
         int offsetY = getScreenOffsetY();
 
         g.setColor(Color.BLACK);
-
-        for (int i = 1; i < grid.width; i++) {
-            g.fillRect(
-                    i * tileSize + offsetX,
-                    0 + offsetY,
-                    gridlineThickness,
-                    tileSize * grid.height);
-        }
-
-        for (int i = 1; i < grid.height; i++) {
-            g.fillRect(
-                    0 + offsetX,
-                    i * tileSize + offsetY,
-                    tileSize * grid.width,
-                    gridlineThickness);
-        }
+        g.fillRect(offsetX, offsetY, getScreenWidth(), getScreenHeight());
 
         // Draw Players
         for (Player player : players) {

@@ -107,7 +107,7 @@ public class Player implements KeyListener {
         }
 
         // Draw head
-        g.setColor(color.darker().darker().darker());
+        g.setColor(Color.WHITE);
         g.fillRect(
                 getHeadPosition().getX() * tileSize + offsetX,
                 getHeadPosition().getY() * tileSize + offsetY,
