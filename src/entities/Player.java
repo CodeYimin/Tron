@@ -18,6 +18,7 @@ public class Player implements KeyListener {
     private boolean[][] bodyPositions;
     private Vector headPosition;
     private Vector headVelocity;
+    private Vector prevHeadVelocity;
     private boolean frozen = false;
 
     public Player(Arena arena, PlayerControls controls, Color color, Vector defaultHeadPosition, Vector defaultHeadVelocity) {
@@ -32,10 +33,6 @@ public class Player implements KeyListener {
 
     public Vector getHeadPosition() {
         return this.headPosition;
-    }
-
-    public void setHeadPosition(Vector position) {
-        this.headPosition = position;
     }
 
     public Arena getArena() {
@@ -84,7 +81,8 @@ public class Player implements KeyListener {
         // Previous head position is now part of the body
         bodyPositions[headPosition.getX()][headPosition.getY()] = true;
         // Update head position
-        setHeadPosition(newHeadPosition);
+        headPosition = newHeadPosition;
+        prevHeadVelocity = headVelocity.clone();
     }
 
     public void draw(Graphics g) {
@@ -117,27 +115,27 @@ public class Player implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Vector newDirection;
+        Vector newHeadVelocity;
 
         int key = e.getKeyCode();
         if (key == controls.getLeftKey()) {
-            newDirection = Vector.LEFT;
+            newHeadVelocity = Vector.LEFT;
         } else if (key == controls.getRightKey()) {
-            newDirection = Vector.RIGHT;
+            newHeadVelocity = Vector.RIGHT;
         } else if (key == controls.getUpKey()) {
-            newDirection = Vector.UP;
+            newHeadVelocity = Vector.UP;
         } else if (key == controls.getDownKey()) {
-            newDirection = Vector.DOWN;
+            newHeadVelocity = Vector.DOWN;
         } else {
             return;
         }
 
         // Prevent doing instant 180 degree turn
-        if (newDirection.equals(headVelocity.multiply(-1))) {
+        if (newHeadVelocity.equals(prevHeadVelocity.multiply(-1))) {
             return;
         }
 
-        headVelocity = newDirection;
+        headVelocity = newHeadVelocity;
     }
 
     @Override

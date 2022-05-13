@@ -5,8 +5,6 @@ public class Vector {
     private int y;
 
     public static final Vector ZERO = new Vector(0, 0);
-    public static final Vector ONE = new Vector(1, 1);
-    public static final Vector NEGATIVE_ONE = new Vector(-1, -1);
     public static final Vector UP = new Vector(0, -1);
     public static final Vector DOWN = new Vector(0, 1);
     public static final Vector LEFT = new Vector(-1, 0);
