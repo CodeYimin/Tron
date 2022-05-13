@@ -26,8 +26,8 @@ public class Arena extends JPanel {
         PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
         Player player1 = new Player(this, player1Controls, Color.ORANGE, new Vector(0, 0), Vector.DOWN);
         Player player2 = new Player(this, player2Controls, Color.RED, new Vector(grid.width - 1, grid.height - 1), Vector.UP);
-        addPlayer(player1);
-        addPlayer(player2);
+        players.add(player1);
+        players.add(player2);
 
         for (Player player : players) {
             addKeyListener(player);
@@ -58,57 +58,36 @@ public class Arena extends JPanel {
         return (getHeight() - getScreenHeight()) / 2;
     }
 
-    public void addPlayer(Player player) {
-        players.add(player);
-    }
-
-    private void endMatch(boolean tie, Player winner) {
-        if (tie) {
-            for (Player player : players) {
-                player.setFrozen(true);
-            }
-            return;
-        }
-
-        for (Player player : players) {
-            player.reset();
-        }
-    }
-
     public void update() {
-        boolean[][] allPlayerBodyPositions = new boolean[grid.width][grid.height];
+        ArrayList<Player> playersLost = new ArrayList<Player>();
 
+        // Move players
         for (Player player : players) {
             try {
                 player.move();
             } catch (PlayerMoveOutOfBoundsException e) {
-                // Player went out of bounds
-                endMatch(false, null);
+                // Player will go out of bounds
+                playersLost.add(player);
             }
+        }
 
-            for (int i = 0; i < player.getBodyPositions().length; i++) {
-                for (int j = 0; j < player.getBodyPositions()[i].length; j++) {
-                    if (player.getBodyPositions()[i][j]) {
-                        allPlayerBodyPositions[i][j] = true;
-                    }
+        // Check for collisions
+        for (Player player : players) {
+            Vector playerHeadPosition = player.getHeadPosition();
+            for (Player otherPlayer : players) {
+                boolean collidesWithBody = otherPlayer.hasBodyAtPosition(playerHeadPosition);
+                boolean collidesWithHead = otherPlayer.getHeadPosition().equals(playerHeadPosition);
+
+                // Player can collide with its own body, but not its own head
+                if (collidesWithBody || (player != otherPlayer && collidesWithHead)) {
+                    playersLost.add(player);
                 }
             }
         }
 
-        for (Player player : players) {
-            Vector headPos = player.getHeadPosition();
-
-            if (allPlayerBodyPositions[headPos.getX()][headPos.getY()]) {
-                // Player hit a body part and lost
-                endMatch(false, null);
-            }
-
-            for (Player otherPlayer : players) {
-                Vector otherHeadPos = otherPlayer.getHeadPosition();
-                if (player != otherPlayer && headPos.equals(otherHeadPos)) {
-                    // Head on collision
-                    endMatch(true, null);
-                }
+        if (playersLost.size() > 0) {
+            for (Player player : playersLost) {
+                player.setFrozen(true);
             }
         }
     }
@@ -117,12 +96,9 @@ public class Arena extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw the grid
-        int offsetX = getScreenOffsetX();
-        int offsetY = getScreenOffsetY();
-
+        // Draw the arena play area
         g.setColor(Color.BLACK);
-        g.fillRect(offsetX, offsetY, getScreenWidth(), getScreenHeight());
+        g.fillRect(getScreenOffsetX(), getScreenOffsetY(), getScreenWidth(), getScreenHeight());
 
         // Draw Players
         for (Player player : players) {

@@ -60,6 +60,10 @@ public class Player implements KeyListener {
         this.frozen = frozen;
     }
 
+    public boolean hasBodyAtPosition(Vector position) {
+        return bodyPositions[(int) position.getX()][(int) position.getY()];
+    }
+
     public void reset() {
         headPosition = defaultHeadPosition.clone();
         headVelocity = defaultHeadVelocity.clone();
@@ -107,14 +111,18 @@ public class Player implements KeyListener {
         // Draw head
         g.setColor(Color.WHITE);
         g.fillRect(
-                getHeadPosition().getX() * tileSize + offsetX,
-                getHeadPosition().getY() * tileSize + offsetY,
+                headPosition.getX() * tileSize + offsetX,
+                headPosition.getY() * tileSize + offsetY,
                 tileSize,
                 tileSize);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (controls == null) {
+            return;
+        }
+
         Vector newHeadVelocity;
 
         int key = e.getKeyCode();
@@ -132,11 +140,10 @@ public class Player implements KeyListener {
 
         // Prevent doing instant 180 degree turn
         if (newHeadVelocity.equals(prevHeadVelocity.multiply(-1))) {
-            headVelocity = prevHeadVelocity.clone();
-            return;
+            headVelocity = prevHeadVelocity;
+        } else {
+            headVelocity = newHeadVelocity;
         }
-
-        headVelocity = newHeadVelocity;
     }
 
     @Override
