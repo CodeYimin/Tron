@@ -132,6 +132,7 @@ public class Player implements KeyListener {
 
         // Prevent doing instant 180 degree turn
         if (newHeadVelocity.equals(prevHeadVelocity.multiply(-1))) {
+            headVelocity = prevHeadVelocity.clone();
             return;
         }
 
