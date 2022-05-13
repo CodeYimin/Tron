@@ -9,26 +9,25 @@ import misc.Vector;
 import panels.Arena;
 
 public class Player implements KeyListener {
-    private int upKey;
-    private int downKey;
-    private int leftKey;
-    private int rightKey;
-
+    private Arena arena;
+    private Vector defaultHeadPosition;
+    private Vector defaultHeadVelocity;
+    private PlayerControls controls;
     private Color color;
 
-    private Arena arena;
     private boolean[][] bodyPositions;
-    private Vector headPosition = new Vector(0, 0);
-    private Vector headVelocity = new Vector(0, 0);
+    private Vector headPosition;
+    private Vector headVelocity;
     private boolean frozen = false;
 
-    public Player(int upKey, int downKey, int leftKey, int rightKey, Color color, Arena arena) {
-        this.upKey = upKey;
-        this.downKey = downKey;
-        this.leftKey = leftKey;
-        this.rightKey = rightKey;
+    public Player(Arena arena, PlayerControls controls, Color color, Vector defaultHeadPosition, Vector defaultHeadVelocity) {
+        this.arena = arena;
+        this.controls = controls;
         this.color = color;
-        setArena(arena);
+        this.defaultHeadPosition = defaultHeadPosition;
+        this.defaultHeadVelocity = defaultHeadVelocity;
+
+        reset();
     }
 
     public Vector getHeadPosition() {
@@ -45,7 +44,7 @@ public class Player implements KeyListener {
 
     public void setArena(Arena arena) {
         this.arena = arena;
-        resetBodyPositions();
+        reset();
     }
 
     public boolean[][] getBodyPositions() {
@@ -60,18 +59,15 @@ public class Player implements KeyListener {
         this.headVelocity = velocity;
     }
 
-    public void resetBodyPositions() {
-        bodyPositions = new boolean[arena.getGrid().width][arena.getGrid().height];
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
     }
 
     public void reset() {
-        headPosition = new Vector(0, 0);
-        headVelocity = new Vector(0, 0);
-        resetBodyPositions();
-    }
-
-    public void update() {
-        // Do nothing
+        headPosition = defaultHeadPosition.clone();
+        headVelocity = defaultHeadVelocity.clone();
+        bodyPositions = new boolean[arena.getGrid().width][arena.getGrid().height];
+        frozen = false;
     }
 
     public void move() throws PlayerMoveOutOfBoundsException {
@@ -111,7 +107,7 @@ public class Player implements KeyListener {
         }
 
         // Draw head
-        g.setColor(Color.BLACK);
+        g.setColor(color.darker().darker().darker());
         g.fillRect(
                 getHeadPosition().getX() * tileSize + offsetX,
                 getHeadPosition().getY() * tileSize + offsetY,
@@ -124,13 +120,13 @@ public class Player implements KeyListener {
         Vector newDirection;
 
         int key = e.getKeyCode();
-        if (key == leftKey) {
+        if (key == controls.getLeftKey()) {
             newDirection = Vector.LEFT;
-        } else if (key == rightKey) {
+        } else if (key == controls.getRightKey()) {
             newDirection = Vector.RIGHT;
-        } else if (key == upKey) {
+        } else if (key == controls.getUpKey()) {
             newDirection = Vector.UP;
-        } else if (key == downKey) {
+        } else if (key == controls.getDownKey()) {
             newDirection = Vector.DOWN;
         } else {
             return;

@@ -72,4 +72,9 @@ public class Vector {
         Vector vector = (Vector) o;
         return x == vector.getX() && y == vector.getY();
     }
+
+    @Override
+    public Vector clone() {
+        return new Vector(x, y);
+    }
 }
