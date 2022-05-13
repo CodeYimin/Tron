@@ -15,7 +15,6 @@ import misc.Vector;
 
 public class Arena extends JPanel {
     private Dimension grid;
-    private double gridLineThicknessPercentage = 0.1;
     private ArrayList<Player> players = new ArrayList<>();
 
     public Arena(Dimension grid, ArrayList<Player> players) {
@@ -44,10 +43,6 @@ public class Arena extends JPanel {
 
     public int getScreenTileSize() {
         return (int) Math.min(getWidth() / grid.width, getHeight() / grid.height);
-    }
-
-    public int getScreenGridlineThickness() {
-        return (int) (getScreenTileSize() * gridLineThicknessPercentage);
     }
 
     public int getScreenHeight() {
