@@ -3,6 +3,7 @@ package panels;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -22,7 +23,8 @@ public class Arena extends JPanel {
 
         setFocusable(true);
 
-        addPlayer(new Player(this));
+        addPlayer(new Player(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, Color.BLUE, this));
+        addPlayer(new Player(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, Color.RED, this));
 
         for (Player player : players) {
             addKeyListener(player);

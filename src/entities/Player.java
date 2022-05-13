@@ -9,13 +9,25 @@ import misc.Vector;
 import panels.Arena;
 
 public class Player implements KeyListener {
+    private int upKey;
+    private int downKey;
+    private int leftKey;
+    private int rightKey;
+
+    private Color color;
+
     private Arena arena;
     private boolean[][] bodyPositions;
     private Vector headPosition = new Vector(0, 0);
     private Vector headVelocity = new Vector(0, 0);
     private boolean frozen = false;
 
-    public Player(Arena arena) {
+    public Player(int upKey, int downKey, int leftKey, int rightKey, Color color, Arena arena) {
+        this.upKey = upKey;
+        this.downKey = downKey;
+        this.leftKey = leftKey;
+        this.rightKey = rightKey;
+        this.color = color;
         setArena(arena);
     }
 
@@ -85,7 +97,7 @@ public class Player implements KeyListener {
         int offsetY = arena.getScreenOffsetY();
 
         // Draw body
-        g.setColor(Color.RED);
+        g.setColor(color);
         for (int i = 0; i < bodyPositions.length; i++) {
             for (int j = 0; j < bodyPositions[i].length; j++) {
                 if (bodyPositions[i][j]) {
@@ -112,13 +124,13 @@ public class Player implements KeyListener {
         Vector newDirection;
 
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == leftKey) {
             newDirection = Vector.LEFT;
-        } else if (key == KeyEvent.VK_RIGHT) {
+        } else if (key == rightKey) {
             newDirection = Vector.RIGHT;
-        } else if (key == KeyEvent.VK_UP) {
+        } else if (key == upKey) {
             newDirection = Vector.UP;
-        } else if (key == KeyEvent.VK_DOWN) {
+        } else if (key == downKey) {
             newDirection = Vector.DOWN;
         } else {
             return;
