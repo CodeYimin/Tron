@@ -59,11 +59,18 @@ public class Player implements KeyListener {
     }
 
     public void update() {
+        // Do nothing
+    }
+
+    public void move() throws PlayerMoveOutOfBoundsException {
+        if (frozen || headVelocity.equals(Vector.ZERO)) {
+            return;
+        }
+
         // Create new head position and check if it is in bounds
         Vector newHeadPosition = headPosition.add(headVelocity);
         if (!newHeadPosition.inBounds(arena.getGrid().width, arena.getGrid().height)) {
-            // Player about to go out of bounds
-            return;
+            throw new PlayerMoveOutOfBoundsException();
         }
 
         // Previous head position is now part of the body
@@ -77,6 +84,7 @@ public class Player implements KeyListener {
         int offsetX = arena.getScreenOffsetX();
         int offsetY = arena.getScreenOffsetY();
 
+        // Draw body
         g.setColor(Color.RED);
         for (int i = 0; i < bodyPositions.length; i++) {
             for (int j = 0; j < bodyPositions[i].length; j++) {
@@ -89,6 +97,14 @@ public class Player implements KeyListener {
                 }
             }
         }
+
+        // Draw head
+        g.setColor(Color.BLACK);
+        g.fillRect(
+                getHeadPosition().getX() * tileSize + offsetX,
+                getHeadPosition().getY() * tileSize + offsetY,
+                tileSize,
+                tileSize);
     }
 
     @Override
@@ -108,6 +124,7 @@ public class Player implements KeyListener {
             return;
         }
 
+        // Prevent doing instant 180 degree turn
         if (newDirection.equals(headVelocity.multiply(-1))) {
             return;
         }

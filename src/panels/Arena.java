@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import entities.Player;
+import entities.PlayerMoveOutOfBoundsException;
+import misc.Vector;
 
 public class Arena extends JPanel {
     private Dimension grid;
@@ -60,19 +62,35 @@ public class Arena extends JPanel {
     }
 
     public void update() {
+        boolean[][] allPlayerBodyPositions = new boolean[grid.width][grid.height];
+
         for (Player player : players) {
-            player.update();
+            try {
+                player.move();
+            } catch (PlayerMoveOutOfBoundsException e) {
+                // Player went out of bounds
+            }
+
+            for (int i = 0; i < player.getBodyPositions().length; i++) {
+                for (int j = 0; j < player.getBodyPositions()[i].length; j++) {
+                    if (player.getBodyPositions()[i][j]) {
+                        allPlayerBodyPositions[i][j] = true;
+                    }
+                }
+            }
         }
 
-        for (Player player1 : players) {
-            for (Player player2 : players) {
-                if (player1 != player2) {
-                    if (player1.getHeadPosition().equals(player2.getHeadPosition())) {
-                        // Head on collision
-                    } else if (player2.getBodyPositions()[player1.getHeadPosition().getX()][player1.getHeadPosition()
-                            .getY()]) {
-                        // Head of player1 hits body of player 2
-                    }
+        for (Player player : players) {
+            Vector headPos = player.getHeadPosition();
+
+            if (allPlayerBodyPositions[headPos.getX()][headPos.getY()]) {
+                // Player hit a body part and lost
+            }
+
+            for (Player otherPlayer : players) {
+                Vector otherHeadPos = otherPlayer.getHeadPosition();
+                if (player != otherPlayer && headPos.equals(otherHeadPos)) {
+                    // Head on collision
                 }
             }
         }
@@ -82,7 +100,7 @@ public class Arena extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Paint the grid
+        // Draw the grid
         int tileSize = getScreenTileSize();
         int gridlineThickness = getScreenGridlineThickness();
 
