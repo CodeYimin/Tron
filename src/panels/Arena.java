@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import entities.Player;
+import entities.PlayerControls;
 import entities.PlayerMoveOutOfBoundsException;
 import misc.Vector;
 
@@ -17,14 +18,20 @@ public class Arena extends JPanel {
     private double gridLineThicknessPercentage = 0.1;
     private ArrayList<Player> players = new ArrayList<>();
 
-    public Arena(Dimension gridSize, ArrayList<Player> players) {
-        this.grid = gridSize;
+    public Arena(Dimension grid, ArrayList<Player> players) {
+        this.grid = grid;
         this.players = players;
 
         setFocusable(true);
 
-        addPlayer(new Player(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, Color.BLUE, this));
-        addPlayer(new Player(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, Color.RED, this));
+        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
+        PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+
+        Player player1 = new Player(this, player1Controls, Color.ORANGE, new Vector(0, 0), Vector.DOWN);
+        Player player2 = new Player(this, player2Controls, Color.RED, new Vector(grid.width - 1, grid.height - 1), Vector.UP);
+
+        addPlayer(player1);
+        addPlayer(player2);
 
         for (Player player : players) {
             addKeyListener(player);
@@ -63,6 +70,19 @@ public class Arena extends JPanel {
         players.add(player);
     }
 
+    private void endMatch(boolean tie, Player winner) {
+        if (tie) {
+            for (Player player : players) {
+                player.setFrozen(true);
+            }
+            return;
+        }
+
+        for (Player player : players) {
+            player.reset();
+        }
+    }
+
     public void update() {
         boolean[][] allPlayerBodyPositions = new boolean[grid.width][grid.height];
 
@@ -71,6 +91,7 @@ public class Arena extends JPanel {
                 player.move();
             } catch (PlayerMoveOutOfBoundsException e) {
                 // Player went out of bounds
+                endMatch(false, null);
             }
 
             for (int i = 0; i < player.getBodyPositions().length; i++) {
@@ -87,12 +108,14 @@ public class Arena extends JPanel {
 
             if (allPlayerBodyPositions[headPos.getX()][headPos.getY()]) {
                 // Player hit a body part and lost
+                endMatch(false, null);
             }
 
             for (Player otherPlayer : players) {
                 Vector otherHeadPos = otherPlayer.getHeadPosition();
                 if (player != otherPlayer && headPos.equals(otherHeadPos)) {
                     // Head on collision
+                    endMatch(true, null);
                 }
             }
         }
