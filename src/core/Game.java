@@ -1,15 +1,12 @@
 package core;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import entities.Player;
 import panels.Arena;
 
 public class Game extends JFrame {
-    private ArrayList<Player> players = new ArrayList<>();
     private Arena arena;
 
     public Game(String title, int width, int height) {
@@ -20,7 +17,7 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Setup arena panel
-        arena = new Arena(new Dimension(100, 100), players);
+        arena = new Arena(new Dimension(300, 200));
         add(arena);
 
         setVisible(true);

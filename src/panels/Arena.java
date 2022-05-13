@@ -17,18 +17,15 @@ public class Arena extends JPanel {
     private Dimension grid;
     private ArrayList<Player> players = new ArrayList<>();
 
-    public Arena(Dimension grid, ArrayList<Player> players) {
+    public Arena(Dimension grid) {
         this.grid = grid;
-        this.players = players;
 
         setFocusable(true);
 
         PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
         PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-
         Player player1 = new Player(this, player1Controls, Color.ORANGE, new Vector(0, 0), Vector.DOWN);
         Player player2 = new Player(this, player2Controls, Color.RED, new Vector(grid.width - 1, grid.height - 1), Vector.UP);
-
         addPlayer(player1);
         addPlayer(player2);
 
