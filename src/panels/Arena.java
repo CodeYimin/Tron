@@ -73,18 +73,14 @@ public class Arena extends JPanel {
 
         // Check for collisions
         for (Player player : players) {
-            Vector playerHeadPosition = player.getHeadPosition();
             for (Player otherPlayer : players) {
-                boolean collidesWithBody = otherPlayer.hasBodyAtPosition(playerHeadPosition);
-                boolean collidesWithHead = otherPlayer.getHeadPosition().equals(playerHeadPosition);
-
-                // Player can collide with its own body, but not its own head
-                if (collidesWithBody || (player != otherPlayer && collidesWithHead)) {
+                if (player.headCollidesWith(otherPlayer)) {
                     playersLost.add(player);
                 }
             }
         }
 
+        // When someone loses
         if (playersLost.size() > 0) {
             for (Player player : playersLost) {
                 player.setFrozen(true);

@@ -60,8 +60,15 @@ public class Player implements KeyListener {
         this.frozen = frozen;
     }
 
-    public boolean hasBodyAtPosition(Vector position) {
-        return bodyPositions[(int) position.getX()][(int) position.getY()];
+    public boolean headCollidesWith(Player other) {
+        boolean headCollidesWithBody = other.getBodyPositions()[(int) (this.headPosition.getX())][(int) (this.headPosition.getY())];
+        boolean headCollidesWithHead = other.getHeadPosition().equals(this.headPosition);
+
+        if (other == this) {
+            return headCollidesWithBody;
+        } else {
+            return headCollidesWithBody || headCollidesWithHead;
+        }
     }
 
     public void reset() {
