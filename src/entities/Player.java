@@ -61,6 +61,10 @@ public class Player implements KeyListener {
     }
 
     public boolean headCollidesWith(Player other) {
+        if (this.getArena() != other.getArena()) {
+            return false;
+        }
+
         boolean headCollidesWithBody = other.getBodyPositions()[(int) (this.headPosition.getX())][(int) (this.headPosition.getY())];
         boolean headCollidesWithHead = other.getHeadPosition().equals(this.headPosition);
 
