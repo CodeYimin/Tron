@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import panels.Arena;
 
 public class Game extends JFrame {
+    public static int FRAMES_PER_SECOND = 100;
     private Arena arena;
 
     public Game(String title, int width, int height) {
@@ -32,7 +33,7 @@ public class Game extends JFrame {
             arena.update();
 
             try {
-                Thread.sleep(10);
+                Thread.sleep(1000/Game.FRAMES_PER_SECOND);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
