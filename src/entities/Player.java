@@ -93,8 +93,8 @@ public class Player implements KeyListener {
     }
 
     public void reset() {
-        this.headPosition = this.defaultHeadPosition.clone();
-        this.headVelocity = this.defaultHeadVelocity.clone();
+        this.headPosition = this.defaultHeadPosition;
+        this.headVelocity = this.defaultHeadVelocity;
         this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
         this.frozen = false;
     }
@@ -114,7 +114,7 @@ public class Player implements KeyListener {
         this.bodyPositions[this.headPosition.getX()][this.headPosition.getY()] = true;
         // Update head position
         this.headPosition = newHeadPosition;
-        this.prevHeadVelocity = this.headVelocity.clone();
+        this.prevHeadVelocity = this.headVelocity;
     }
 
     public void draw(Graphics g) {

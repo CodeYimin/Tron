@@ -1,14 +1,14 @@
 package misc;
 
 public class Vector {
-    private int x;
-    private int y;
-
     public static final Vector ZERO = new Vector(0, 0);
     public static final Vector UP = new Vector(0, -1);
     public static final Vector DOWN = new Vector(0, 1);
     public static final Vector LEFT = new Vector(-1, 0);
     public static final Vector RIGHT = new Vector(1, 0);
+
+    private final int x;
+    private final int y;
 
     public Vector(int x, int y) {
         this.x = x;
@@ -25,14 +25,6 @@ public class Vector {
 
     public int getY() {
         return y;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public Vector add(Vector v) {
@@ -81,10 +73,5 @@ public class Vector {
         }
         Vector vector = (Vector) o;
         return x == vector.getX() && y == vector.getY();
-    }
-
-    @Override
-    public Vector clone() {
-        return new Vector(x, y);
     }
 }
