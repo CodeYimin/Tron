@@ -95,7 +95,7 @@ public class Player implements KeyListener {
     public void reset() {
         this.headPosition = this.defaultHeadPosition.clone();
         this.headVelocity = this.defaultHeadVelocity.clone();
-        this.bodyPositions = new boolean[this.arena.getGrid().width][this.arena.getGrid().height];
+        this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
         this.frozen = false;
     }
 
@@ -106,7 +106,7 @@ public class Player implements KeyListener {
 
         // Create new head position and check if it is in bounds
         Vector newHeadPosition = this.headPosition.add(this.headVelocity);
-        if (!newHeadPosition.inBounds(this.arena.getGrid().width, this.arena.getGrid().height)) {
+        if (!newHeadPosition.inBounds(this.arena.getGrid())) {
             throw new PlayerMoveOutOfBoundsException();
         }
 

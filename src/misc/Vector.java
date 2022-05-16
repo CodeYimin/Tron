@@ -15,6 +15,10 @@ public class Vector {
         this.y = y;
     }
 
+    public Vector(Dimension dimension) {
+        this(dimension.getWidth(), dimension.getHeight());
+    }
+
     public int getX() {
         return x;
     }
@@ -35,8 +39,16 @@ public class Vector {
         return new Vector(x + v.getX(), y + v.getY());
     }
 
+    public Vector add(int scalar) {
+        return new Vector(x + scalar, y + scalar);
+    }
+
     public Vector subtract(Vector v) {
         return new Vector(x - v.getX(), y - v.getY());
+    }
+
+    public Vector subtract(int scalar) {
+        return new Vector(x - scalar, y - scalar);
     }
 
     public Vector multiply(int scalar) {
@@ -51,8 +63,8 @@ public class Vector {
         return new Vector(x % scalar, y % scalar);
     }
 
-    public boolean inBounds(int width, int height) {
-        return x >= 0 && x < width && y >= 0 && y < height;
+    public boolean inBounds(Dimension bounds) {
+        return x >= 0 && x < bounds.getWidth() && y >= 0 && y < bounds.getHeight();
     }
 
     @Override
