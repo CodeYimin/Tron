@@ -29,7 +29,7 @@ public class Arena extends JPanel {
         players.add(player1);
         players.add(player2);
 
-        for (Player player : players) {
+        for (Player player: players) {
             addKeyListener(player);
         }
     }
@@ -62,19 +62,19 @@ public class Arena extends JPanel {
         ArrayList<Player> playersLost = new ArrayList<Player>();
 
         // Move players
-        for (Player player : players) {
+        for (Player player: players) {
             try {
                 player.move();
-            } catch (PlayerMoveOutOfBoundsException e) {
+            } catch (PlayerMoveOutOfBoundsException ex) {
                 // Player will go out of bounds
                 playersLost.add(player);
             }
         }
 
         // Check for collisions
-        for (Player player : players) {
-            for (Player otherPlayer : players) {
-                if (player.headCollidesWith(otherPlayer)) {
+        for (Player player: players) {
+            for (Player otherPlayer: players) {
+                if (player.collidesWith(otherPlayer)) {
                     playersLost.add(player);
                 }
             }

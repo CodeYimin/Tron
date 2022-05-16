@@ -14,6 +14,7 @@ public class Player implements KeyListener {
     private Vector defaultHeadVelocity;
     private PlayerControls controls;
     private Color color;
+    private int score;
 
     private boolean[][] bodyPositions;
     private Vector headPosition;
@@ -27,6 +28,7 @@ public class Player implements KeyListener {
         this.color = color;
         this.defaultHeadPosition = defaultHeadPosition;
         this.defaultHeadVelocity = defaultHeadVelocity;
+        this.score = 0;
 
         reset();
     }
@@ -34,38 +36,38 @@ public class Player implements KeyListener {
     public Vector getHeadPosition() {
         return this.headPosition;
     }
-
     public Arena getArena() {
         return this.arena;
     }
-
     public void setArena(Arena arena) {
         this.arena = arena;
         reset();
     }
-
     public boolean[][] getBodyPositions() {
         return this.bodyPositions;
     }
-
     public Vector getHeadVelocity() {
         return this.headVelocity;
     }
-
     public void setHeadVelocity(Vector velocity) {
         this.headVelocity = velocity;
     }
-
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
     }
+    public int getScore() {
+        return this.score;
+    }
+    public void incrementScore(int amount) {
+        this.score += amount;
+    }
 
-    public boolean headCollidesWith(Player other) {
+    public boolean collidesWith(Player other) {
         if (this.getArena() != other.getArena()) {
             return false;
         }
 
-        boolean headCollidesWithBody = other.getBodyPositions()[(int) (this.headPosition.getX())][(int) (this.headPosition.getY())];
+        boolean headCollidesWithBody = other.getBodyPositions()[this.headPosition.getX()][this.headPosition.getY()];
         boolean headCollidesWithHead = other.getHeadPosition().equals(this.headPosition);
 
         if (other == this) {
@@ -76,40 +78,40 @@ public class Player implements KeyListener {
     }
 
     public void reset() {
-        headPosition = defaultHeadPosition.clone();
-        headVelocity = defaultHeadVelocity.clone();
-        bodyPositions = new boolean[arena.getGrid().width][arena.getGrid().height];
-        frozen = false;
+        this.headPosition = this.defaultHeadPosition.clone();
+        this.headVelocity = this.defaultHeadVelocity.clone();
+        this.bodyPositions = new boolean[this.arena.getGrid().width][this.arena.getGrid().height];
+        this.frozen = false;
     }
 
     public void move() throws PlayerMoveOutOfBoundsException {
-        if (frozen || headVelocity.equals(Vector.ZERO)) {
+        if (this.frozen || this.headVelocity.equals(Vector.ZERO)) {
             return;
         }
 
         // Create new head position and check if it is in bounds
-        Vector newHeadPosition = headPosition.add(headVelocity);
-        if (!newHeadPosition.inBounds(arena.getGrid().width, arena.getGrid().height)) {
+        Vector newHeadPosition = this.headPosition.add(this.headVelocity);
+        if (!newHeadPosition.inBounds(this.arena.getGrid().width, this.arena.getGrid().height)) {
             throw new PlayerMoveOutOfBoundsException();
         }
 
         // Previous head position is now part of the body
-        bodyPositions[headPosition.getX()][headPosition.getY()] = true;
+        this.bodyPositions[this.headPosition.getX()][this.headPosition.getY()] = true;
         // Update head position
-        headPosition = newHeadPosition;
-        prevHeadVelocity = headVelocity.clone();
+        this.headPosition = newHeadPosition;
+        this.prevHeadVelocity = this.headVelocity.clone();
     }
 
     public void draw(Graphics g) {
-        int tileSize = arena.getScreenTileSize();
-        int offsetX = arena.getScreenOffsetX();
-        int offsetY = arena.getScreenOffsetY();
+        int tileSize = this.arena.getScreenTileSize();
+        int offsetX = this.arena.getScreenOffsetX();
+        int offsetY = this.arena.getScreenOffsetY();
 
         // Draw body
         g.setColor(color);
-        for (int i = 0; i < bodyPositions.length; i++) {
-            for (int j = 0; j < bodyPositions[i].length; j++) {
-                if (bodyPositions[i][j]) {
+        for (int i = 0; i < this.bodyPositions.length; i++) {
+            for (int j = 0; j < this.bodyPositions[i].length; j++) {
+                if (this.bodyPositions[i][j]) {
                     g.fillRect(
                             i * tileSize + offsetX,
                             j * tileSize + offsetY,
@@ -122,38 +124,38 @@ public class Player implements KeyListener {
         // Draw head
         g.setColor(Color.WHITE);
         g.fillRect(
-                headPosition.getX() * tileSize + offsetX,
-                headPosition.getY() * tileSize + offsetY,
+                this.headPosition.getX() * tileSize + offsetX,
+                this.headPosition.getY() * tileSize + offsetY,
                 tileSize,
                 tileSize);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (controls == null) {
+        if (this.controls == null) {
             return;
         }
 
         Vector newHeadVelocity;
 
         int key = e.getKeyCode();
-        if (key == controls.getLeftKey()) {
+        if (key == this.controls.getLeftKey()) {
             newHeadVelocity = Vector.LEFT;
-        } else if (key == controls.getRightKey()) {
+        } else if (key == this.controls.getRightKey()) {
             newHeadVelocity = Vector.RIGHT;
-        } else if (key == controls.getUpKey()) {
+        } else if (key == this.controls.getUpKey()) {
             newHeadVelocity = Vector.UP;
-        } else if (key == controls.getDownKey()) {
+        } else if (key == this.controls.getDownKey()) {
             newHeadVelocity = Vector.DOWN;
         } else {
             return;
         }
 
         // Prevent doing instant 180 degree turn
-        if (newHeadVelocity.equals(prevHeadVelocity.multiply(-1))) {
-            headVelocity = prevHeadVelocity;
+        if (newHeadVelocity.equals(this.prevHeadVelocity.multiply(-1))) {
+            this.headVelocity = this.prevHeadVelocity;
         } else {
-            headVelocity = newHeadVelocity;
+            this.headVelocity = newHeadVelocity;
         }
     }
 
