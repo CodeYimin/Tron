@@ -10,17 +10,20 @@ import panels.Arena;
 
 public class Player implements KeyListener {
     private Arena arena;
-    private Vector defaultHeadPosition;
-    private Vector defaultHeadVelocity;
     private PlayerControls controls;
     private Color color;
     private int score;
+    private boolean frozen = false;
 
-    private boolean[][] bodyPositions;
+    // Position
+    private Vector defaultHeadPosition;
     private Vector headPosition;
+    private boolean[][] bodyPositions;
+
+    // Velocity
+    private Vector defaultHeadVelocity;
     private Vector headVelocity;
     private Vector prevHeadVelocity;
-    private boolean frozen = false;
 
     public Player(Arena arena, PlayerControls controls, Color color, Vector defaultHeadPosition, Vector defaultHeadVelocity) {
         this.arena = arena;
@@ -36,29 +39,41 @@ public class Player implements KeyListener {
     public Vector getHeadPosition() {
         return this.headPosition;
     }
+
     public Arena getArena() {
         return this.arena;
     }
+
     public void setArena(Arena arena) {
         this.arena = arena;
         reset();
     }
+
     public boolean[][] getBodyPositions() {
         return this.bodyPositions;
     }
+
     public Vector getHeadVelocity() {
         return this.headVelocity;
     }
+
     public void setHeadVelocity(Vector velocity) {
         this.headVelocity = velocity;
     }
+
+    public boolean getFrozen() {
+        return this.frozen;
+    }
+
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
     }
+
     public int getScore() {
         return this.score;
     }
-    public void incrementScore(int amount) {
+
+    public void addScore(int amount) {
         this.score += amount;
     }
 
