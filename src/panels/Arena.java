@@ -22,10 +22,13 @@ public class Arena extends JPanel {
 
         this.setFocusable(true);
 
+        Color player1Color = new Color(157, 239, 255);
+        Color player2Color= new Color(253, 193, 1);
+
         PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
         PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-        Player player1 = new Player(this, player1Controls, Color.ORANGE, new Vector(0, 0), Vector.DOWN);
-        Player player2 = new Player(this, player2Controls, Color.RED, new Vector(this.grid).subtract(1), Vector.UP);
+        Player player1 = new Player(this, player1Controls, player1Color, new Vector(0, 0), Vector.DOWN);
+        Player player2 = new Player(this, player2Controls, player2Color, new Vector(this.grid).subtract(1), Vector.UP);
         this.players.add(player1);
         this.players.add(player2);
 
