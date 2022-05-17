@@ -1,18 +1,22 @@
 package misc;
 
 public class Vector {
-    private int x;
-    private int y;
-
     public static final Vector ZERO = new Vector(0, 0);
     public static final Vector UP = new Vector(0, -1);
     public static final Vector DOWN = new Vector(0, 1);
     public static final Vector LEFT = new Vector(-1, 0);
     public static final Vector RIGHT = new Vector(1, 0);
 
+    private final int x;
+    private final int y;
+
     public Vector(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Vector(Dimension dimension) {
+        this(dimension.getWidth(), dimension.getHeight());
     }
 
     public int getX() {
@@ -23,20 +27,20 @@ public class Vector {
         return y;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public Vector add(Vector v) {
         return new Vector(x + v.getX(), y + v.getY());
     }
 
+    public Vector add(int scalar) {
+        return new Vector(x + scalar, y + scalar);
+    }
+
     public Vector subtract(Vector v) {
         return new Vector(x - v.getX(), y - v.getY());
+    }
+
+    public Vector subtract(int scalar) {
+        return new Vector(x - scalar, y - scalar);
     }
 
     public Vector multiply(int scalar) {
@@ -51,8 +55,8 @@ public class Vector {
         return new Vector(x % scalar, y % scalar);
     }
 
-    public boolean inBounds(int width, int height) {
-        return x >= 0 && x < width && y >= 0 && y < height;
+    public boolean inBounds(Dimension bounds) {
+        return x >= 0 && x < bounds.getWidth() && y >= 0 && y < bounds.getHeight();
     }
 
     @Override
@@ -69,10 +73,5 @@ public class Vector {
         }
         Vector vector = (Vector) o;
         return x == vector.getX() && y == vector.getY();
-    }
-
-    @Override
-    public Vector clone() {
-        return new Vector(x, y);
     }
 }
