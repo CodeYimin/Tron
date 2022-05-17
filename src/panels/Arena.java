@@ -27,8 +27,8 @@ public class Arena extends JPanel {
 
         PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
         PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-        Player player1 = new Player(this, player1Controls, player1Color, new Vector(0, 0), Vector.DOWN);
-        Player player2 = new Player(this, player2Controls, player2Color, new Vector(this.grid).subtract(1), Vector.UP);
+        Player player1 = new Player(this, new Vector(0, 0), Vector.DOWN, player1Controls, player1Color);
+        Player player2 = new Player(this, new Vector(this.grid).subtract(1), Vector.UP, player2Controls, player2Color);
         this.players.add(player1);
         this.players.add(player2);
 
@@ -95,12 +95,16 @@ public class Arena extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        // Draw the background
+        g.setColor(Color.GRAY);
+        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
         // Draw the arena play area
         g.setColor(Color.BLACK);
         g.fillRect(getScreenOffsetX(), getScreenOffsetY(), getScreenWidth(), getScreenHeight());
 
         // Draw Players
-        for (Player player : this.players) {
+        for (Player player: this.players) {
             player.draw(g);
         }
     }
