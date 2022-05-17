@@ -1,7 +1,6 @@
 package panels;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import javax.swing.JPanel;
 import entities.Player;
 import entities.PlayerControls;
 import entities.PlayerMoveOutOfBoundsException;
+import misc.Dimension;
 import misc.Vector;
 
 public class Arena extends JPanel {
@@ -20,17 +20,20 @@ public class Arena extends JPanel {
     public Arena(Dimension grid) {
         this.grid = grid;
 
-        setFocusable(true);
+        this.setFocusable(true);
+
+        Color player1Color = new Color(157, 239, 255);
+        Color player2Color= new Color(253, 193, 1);
 
         PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
         PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-        Player player1 = new Player(this, player1Controls, Color.ORANGE, new Vector(0, 0), Vector.DOWN);
-        Player player2 = new Player(this, player2Controls, Color.RED, new Vector(grid.width - 1, grid.height - 1), Vector.UP);
-        players.add(player1);
-        players.add(player2);
+        Player player1 = new Player(this, player1Controls, player1Color, new Vector(0, 0), Vector.DOWN);
+        Player player2 = new Player(this, player2Controls, player2Color, new Vector(this.grid).subtract(1), Vector.UP);
+        this.players.add(player1);
+        this.players.add(player2);
 
-        for (Player player: players) {
-            addKeyListener(player);
+        for (Player player : this.players) {
+            this.addKeyListener(player);
         }
     }
 
@@ -39,30 +42,30 @@ public class Arena extends JPanel {
     }
 
     public int getScreenTileSize() {
-        return (int) Math.min(getWidth() / grid.width, getHeight() / grid.height);
+        return Math.min(this.getWidth() / this.grid.getWidth(), this.getHeight() / this.grid.getHeight());
     }
 
     public int getScreenHeight() {
-        return getScreenTileSize() * grid.height;
+        return this.getScreenTileSize() * this.grid.getHeight();
     }
 
     public int getScreenWidth() {
-        return getScreenTileSize() * grid.width;
+        return this.getScreenTileSize() * this.grid.getWidth();
     }
 
     public int getScreenOffsetX() {
-        return (getWidth() - getScreenWidth()) / 2;
+        return (this.getWidth() - this.getScreenWidth()) / 2;
     }
 
     public int getScreenOffsetY() {
-        return (getHeight() - getScreenHeight()) / 2;
+        return (this.getHeight() - this.getScreenHeight()) / 2;
     }
 
     public void update() {
         ArrayList<Player> playersLost = new ArrayList<Player>();
 
         // Move players
-        for (Player player: players) {
+        for (Player player : this.players) {
             try {
                 player.move();
             } catch (PlayerMoveOutOfBoundsException ex) {
@@ -72,8 +75,8 @@ public class Arena extends JPanel {
         }
 
         // Check for collisions
-        for (Player player: players) {
-            for (Player otherPlayer: players) {
+        for (Player player : this.players) {
+            for (Player otherPlayer : this.players) {
                 if (player.collidesWith(otherPlayer)) {
                     playersLost.add(player);
                 }
@@ -97,7 +100,7 @@ public class Arena extends JPanel {
         g.fillRect(getScreenOffsetX(), getScreenOffsetY(), getScreenWidth(), getScreenHeight());
 
         // Draw Players
-        for (Player player : players) {
+        for (Player player : this.players) {
             player.draw(g);
         }
     }

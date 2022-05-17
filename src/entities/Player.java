@@ -10,17 +10,20 @@ import panels.Arena;
 
 public class Player implements KeyListener {
     private Arena arena;
-    private Vector defaultHeadPosition;
-    private Vector defaultHeadVelocity;
     private PlayerControls controls;
     private Color color;
     private int score;
+    private boolean frozen = false;
 
-    private boolean[][] bodyPositions;
+    // Position
+    private Vector defaultHeadPosition;
     private Vector headPosition;
+    private boolean[][] bodyPositions;
+
+    // Velocity
+    private Vector defaultHeadVelocity;
     private Vector headVelocity;
     private Vector prevHeadVelocity;
-    private boolean frozen = false;
 
     public Player(Arena arena, Vector defaultHeadPosition, Vector defaultHeadVelocity, PlayerControls controls, Color color) {
         this.arena = arena;
@@ -36,29 +39,41 @@ public class Player implements KeyListener {
     public Vector getHeadPosition() {
         return this.headPosition;
     }
+
     public Arena getArena() {
         return this.arena;
     }
+
     public void setArena(Arena arena) {
         this.arena = arena;
         reset();
     }
+
     public boolean[][] getBodyPositions() {
         return this.bodyPositions;
     }
+
     public Vector getHeadVelocity() {
         return this.headVelocity;
     }
+
     public void setHeadVelocity(Vector velocity) {
         this.headVelocity = velocity;
     }
+
+    public boolean getFrozen() {
+        return this.frozen;
+    }
+
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
     }
+
     public int getScore() {
         return this.score;
     }
-    public void incrementScore(int amount) {
+
+    public void addScore(int amount) {
         this.score += amount;
     }
 
@@ -78,9 +93,9 @@ public class Player implements KeyListener {
     }
 
     public void reset() {
-        this.headPosition = this.defaultHeadPosition.clone();
-        this.headVelocity = this.defaultHeadVelocity.clone();
-        this.bodyPositions = new boolean[this.arena.getGrid().width][this.arena.getGrid().height];
+        this.headPosition = this.defaultHeadPosition;
+        this.headVelocity = this.defaultHeadVelocity;
+        this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
         this.frozen = false;
     }
     
@@ -95,7 +110,7 @@ public class Player implements KeyListener {
 
         // Create new head position and check if it is in bounds
         Vector newHeadPosition = this.headPosition.add(this.headVelocity);
-        if (!newHeadPosition.inBounds(this.arena.getGrid().width, this.arena.getGrid().height)) {
+        if (!newHeadPosition.inBounds(this.arena.getGrid())) {
             throw new PlayerMoveOutOfBoundsException();
         }
 
@@ -103,7 +118,7 @@ public class Player implements KeyListener {
         this.bodyPositions[this.headPosition.getX()][this.headPosition.getY()] = true;
         // Update head position
         this.headPosition = newHeadPosition;
-        this.prevHeadVelocity = this.headVelocity.clone();
+        this.prevHeadVelocity = this.headVelocity;
     }
 
     public void draw(Graphics g) {
