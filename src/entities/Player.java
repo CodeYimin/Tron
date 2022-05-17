@@ -22,12 +22,12 @@ public class Player implements KeyListener {
     private Vector prevHeadVelocity;
     private boolean frozen = false;
 
-    public Player(Arena arena, PlayerControls controls, Color color, Vector defaultHeadPosition, Vector defaultHeadVelocity) {
+    public Player(Arena arena, Vector defaultHeadPosition, Vector defaultHeadVelocity, PlayerControls controls, Color color) {
         this.arena = arena;
-        this.controls = controls;
-        this.color = color;
         this.defaultHeadPosition = defaultHeadPosition;
         this.defaultHeadVelocity = defaultHeadVelocity;
+        this.controls = controls;
+        this.color = color;
         this.score = 0;
 
         reset();
@@ -82,6 +82,10 @@ public class Player implements KeyListener {
         this.headVelocity = this.defaultHeadVelocity.clone();
         this.bodyPositions = new boolean[this.arena.getGrid().width][this.arena.getGrid().height];
         this.frozen = false;
+    }
+    
+    public void useHack() {
+
     }
 
     public void move() throws PlayerMoveOutOfBoundsException {
