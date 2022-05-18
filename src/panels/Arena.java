@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import core.Game;
 import entities.Player;
 import entities.PlayerControls;
 import entities.PlayerMoveOutOfBoundsException;
@@ -14,11 +15,13 @@ import misc.Dimension;
 import misc.Vector;
 
 public class Arena extends JPanel {
+    private Game game;
     private Dimension grid;
     private ArrayList<Player> players = new ArrayList<>();
     private boolean hackUsed = false;
 
-    public Arena(Dimension grid) {
+    public Arena(Game game, Dimension grid) {
+        this.game = game;
         this.grid = grid;
 
         this.setFocusable(true);
@@ -71,19 +74,29 @@ public class Arena extends JPanel {
         }
 
         // Check for collisions
-        for (Player player: this.players) {
-            for (Player otherPlayer: this.players) {
-                if (player.collidesWith(otherPlayer)) {
-                    playersLost.add(player);
+        for(Player playerA: players) {
+            boolean playerACollided = false;
+            for(Player playerB: players) {
+                if(playerA.collidesWith(playerB)) {
+                    playerACollided = true;
                 }
             }
+            if(playerACollided) playersLost.add(playerA);
         }
 
         // When someone loses
         if (playersLost.size() > 0) {
             for (Player player: playersLost) {
-                player.setFrozen(true);
+                player.setState(Player.DEAD);
             }
+        }
+
+        int playersRemaining = 0;
+        for(Player player: players) {
+            if(player.getState() == Player.ALIVE) playersRemaining++;
+        }
+        if(playersRemaining <= 1) {
+            game.endRound();
         }
     }
 

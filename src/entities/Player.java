@@ -9,11 +9,14 @@ import misc.Vector;
 import panels.Arena;
 
 public class Player implements KeyListener {
+    public static final int ALIVE = 1;
+    public static final int DEAD = 0;
+    public static final int INACTIVE = -1;
     private Arena arena;
     private PlayerControls controls;
     private Color color;
     private int score;
-    private boolean frozen = false;
+    private int state;
 
     // Position
     private Vector defaultHeadPosition;
@@ -61,11 +64,11 @@ public class Player implements KeyListener {
     public void setHeadVelocity(Vector velocity) {
         this.headVelocity = velocity;
     }
-    public boolean getFrozen() {
-        return this.frozen;
+    public int getState() {
+        return this.state;
     }
-    public void setFrozen(boolean frozen) {
-        this.frozen = frozen;
+    public void setState(int state) {
+        this.state = state;
     }
     public int getScore() {
         return this.score;
@@ -93,15 +96,11 @@ public class Player implements KeyListener {
         this.headPosition = this.defaultHeadPosition;
         this.headVelocity = this.defaultHeadVelocity;
         this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
-        this.frozen = false;
-    }
-    
-    public void useHack() {
-
+        this.state = Player.ALIVE;
     }
 
     public void move() throws PlayerMoveOutOfBoundsException {
-        if (this.frozen || this.headVelocity.equals(Vector.ZERO)) {
+        if (this.state == Player.DEAD || this.state == Player.INACTIVE || this.headVelocity.equals(Vector.ZERO)) {
             return;
         }
 

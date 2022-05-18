@@ -17,7 +17,7 @@ public class Game extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Setup arena panel
-        this.arena = new Arena(new Dimension(300, 200));
+        this.arena = new Arena(this, new Dimension(300, 200));
         this.add(this.arena);
 
         // Make the window and panels visible
@@ -38,5 +38,9 @@ public class Game extends JFrame {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void endRound() {
+        
     }
 }
