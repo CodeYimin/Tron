@@ -39,40 +39,37 @@ public class Player implements KeyListener {
     public Vector getHeadPosition() {
         return this.headPosition;
     }
-
     public Arena getArena() {
         return this.arena;
     }
-
     public void setArena(Arena arena) {
         this.arena = arena;
         reset();
     }
-
+    public PlayerControls getControls() {
+        return this.controls;
+    }
+    public void setControls(PlayerControls newPlayerControls) {
+        this.controls = newPlayerControls;
+    }
     public boolean[][] getBodyPositions() {
         return this.bodyPositions;
     }
-
     public Vector getHeadVelocity() {
         return this.headVelocity;
     }
-
     public void setHeadVelocity(Vector velocity) {
         this.headVelocity = velocity;
     }
-
     public boolean getFrozen() {
         return this.frozen;
     }
-
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
     }
-
     public int getScore() {
         return this.score;
     }
-
     public void addScore(int amount) {
         this.score += amount;
     }
@@ -167,6 +164,9 @@ public class Player implements KeyListener {
         } else if (key == this.controls.getDownKey()) {
             newHeadVelocity = Vector.DOWN;
         } else {
+            if (key == this.controls.getHackKey()) {
+                this.arena.useHack(this);
+            }
             return;
         }
 

@@ -16,6 +16,7 @@ import misc.Vector;
 public class Arena extends JPanel {
     private Dimension grid;
     private ArrayList<Player> players = new ArrayList<>();
+    private boolean hackUsed = false;
 
     public Arena(Dimension grid) {
         this.grid = grid;
@@ -23,16 +24,16 @@ public class Arena extends JPanel {
         this.setFocusable(true);
 
         Color player1Color = new Color(157, 239, 255);
-        Color player2Color= new Color(253, 193, 1);
+        Color player2Color = new Color(253, 193, 1);
 
-        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
+        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q);
         PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
         Player player1 = new Player(this, new Vector(0, 0), Vector.DOWN, player1Controls, player1Color);
         Player player2 = new Player(this, new Vector(this.grid).subtract(1), Vector.UP, player2Controls, player2Color);
         this.players.add(player1);
         this.players.add(player2);
 
-        for (Player player : this.players) {
+        for (Player player: this.players) {
             this.addKeyListener(player);
         }
     }
@@ -40,23 +41,18 @@ public class Arena extends JPanel {
     public Dimension getGrid() {
         return this.grid;
     }
-
     public int getScreenTileSize() {
         return Math.min(this.getWidth() / this.grid.getWidth(), this.getHeight() / this.grid.getHeight());
     }
-
     public int getScreenHeight() {
         return this.getScreenTileSize() * this.grid.getHeight();
     }
-
     public int getScreenWidth() {
         return this.getScreenTileSize() * this.grid.getWidth();
     }
-
     public int getScreenOffsetX() {
         return (this.getWidth() - this.getScreenWidth()) / 2;
     }
-
     public int getScreenOffsetY() {
         return (this.getHeight() - this.getScreenHeight()) / 2;
     }
@@ -65,7 +61,7 @@ public class Arena extends JPanel {
         ArrayList<Player> playersLost = new ArrayList<Player>();
 
         // Move players
-        for (Player player : this.players) {
+        for (Player player: this.players) {
             try {
                 player.move();
             } catch (PlayerMoveOutOfBoundsException ex) {
@@ -75,8 +71,8 @@ public class Arena extends JPanel {
         }
 
         // Check for collisions
-        for (Player player : this.players) {
-            for (Player otherPlayer : this.players) {
+        for (Player player: this.players) {
+            for (Player otherPlayer: this.players) {
                 if (player.collidesWith(otherPlayer)) {
                     playersLost.add(player);
                 }
@@ -85,10 +81,24 @@ public class Arena extends JPanel {
 
         // When someone loses
         if (playersLost.size() > 0) {
-            for (Player player : playersLost) {
+            for (Player player: playersLost) {
                 player.setFrozen(true);
             }
         }
+    }
+
+    public void useHack(Player playerUsed) {
+        if(this.hackUsed) {
+            return;
+        }
+        PlayerControls newControls = new PlayerControls(KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+        for(Player player: players) {
+            if(player != playerUsed) {
+                player.setControls(newControls);
+            }
+        }
+        new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+        this.hackUsed = true;
     }
 
     @Override
