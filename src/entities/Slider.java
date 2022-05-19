@@ -44,10 +44,16 @@ public class Slider {
 		frame.add(panel);
 		frame.setSize(420, 420);
 		frame.setVisible(true);
+		
 	}
+
 
 	public int getValue() {
 		return slider.getValue();
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		label.setText("Game Speed " + slider.getValue());
 	}
 
 	public void addChangeListener(ChangeListener listener) {

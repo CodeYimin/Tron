@@ -3,12 +3,15 @@ package core;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import entities.Slider;
 import screens.GameScreen;
 
 public class Game extends JFrame {
-    public static int FRAMES_PER_SECOND = 30;
+    public int fps = 30;
+    Slider slider;
 
     private ArrayList<Updatable> updatables = new ArrayList<>();
 
@@ -29,6 +32,13 @@ public class Game extends JFrame {
         // Make the window and panels visible
         super.setVisible(true);
 
+        slider = new Slider();
+        slider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Game.this.fps = slider.getValue();
+            }
+        });
         // Start game loop
         this.startLoop();
     }
@@ -42,7 +52,7 @@ public class Game extends JFrame {
 
             // Delay to match the desired FPS
             try {
-                Thread.sleep(1000 / Game.FRAMES_PER_SECOND);
+                Thread.sleep(1000 / this.fps);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
