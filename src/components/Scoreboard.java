@@ -11,7 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import entities.Player;
+import player.Player;
 
 public class Scoreboard extends Box {
     private ArrayList<PlayerScore> playerScores = new ArrayList<>();

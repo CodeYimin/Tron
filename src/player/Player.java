@@ -1,4 +1,4 @@
-package entities;
+package player;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,25 +9,25 @@ import components.Arena;
 import misc.XY;
 
 public class Player implements KeyListener {
-    // Player States
-    public static final int ALIVE = 1;
-    public static final int DEAD = 0;
+    // Defaults
+    private final PlayerControls defaultControls;
+    private final XY defaultHeadPosition;
+    private final XY defaultHeadVelocity;
 
-    // General variables
+    // Mostly unchanged variables
     private Arena arena;
-    private PlayerControls defaultControls;
     private PlayerControls controls;
     private Color color;
+
+    // State variables
     private int score;
-    private int state;
+    private boolean alive;
 
     // Position
-    private XY defaultHeadPosition;
     private XY headPosition;
     private boolean[][] bodyPositions;
 
     // Velocity
-    private XY defaultHeadVelocity;
     private XY headVelocity;
     private XY prevHeadVelocity;
 
@@ -69,12 +69,12 @@ public class Player implements KeyListener {
         this.headVelocity = velocity;
     }
 
-    public int getState() {
-        return this.state;
+    public boolean isAlive() {
+        return this.alive;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     public int getScore() {
@@ -98,10 +98,10 @@ public class Player implements KeyListener {
 
     public void respawn() {
         this.controls = this.defaultControls;
-        this.bodyPositions = new boolean[this.arena.getDimensions().getWidth()][this.arena.getDimensions().getHeight()];
         this.headPosition = this.defaultHeadPosition;
         this.headVelocity = this.defaultHeadVelocity;
-        this.state = Player.ALIVE;
+        this.bodyPositions = new boolean[this.arena.getDimensions().getWidth()][this.arena.getDimensions().getHeight()];
+        this.alive = true;
     }
 
     public boolean headCollidesWith(Player other) {
@@ -120,7 +120,7 @@ public class Player implements KeyListener {
     }
 
     public void move() throws PlayerMoveOutOfBoundsException {
-        if (this.state == Player.DEAD || this.headVelocity.equals(XY.ZERO)) {
+        if (!this.alive || this.headVelocity.equals(XY.ZERO)) {
             return;
         }
 

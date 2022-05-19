@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import entities.Player;
-import entities.PlayerControls;
-import entities.PlayerMoveOutOfBoundsException;
 import misc.WidthHeight;
+import player.Player;
+import player.PlayerControls;
+import player.PlayerMoveOutOfBoundsException;
 
 public class Arena extends JPanel {
     private WidthHeight dimensions;
@@ -23,7 +23,7 @@ public class Arena extends JPanel {
     }
 
     public int getScreenTileSize() {
-        return Math.min(this.getParent().getWidth() / this.dimensions.getWidth(), this.getParent().getHeight() / this.dimensions.getHeight());
+        return Math.min(super.getParent().getWidth() / this.dimensions.getWidth(), super.getParent().getHeight() / this.dimensions.getHeight());
     }
 
     public int getScreenHeight() {
@@ -32,14 +32,6 @@ public class Arena extends JPanel {
 
     public int getScreenWidth() {
         return this.getScreenTileSize() * this.dimensions.getWidth();
-    }
-
-    public int getScreenOffsetX() {
-        return (this.getWidth() - this.getScreenWidth()) / 2;
-    }
-
-    public int getScreenOffsetY() {
-        return (this.getHeight() - this.getScreenHeight()) / 2;
     }
 
     public void addPlayer(Player player) {
@@ -77,7 +69,7 @@ public class Arena extends JPanel {
                     playerACollided = true;
                 }
             }
-            if (playerACollided && playerA.getState() != Player.DEAD) {
+            if (playerA.isAlive() && playerACollided) {
                 playersLost.add(playerA);
             }
         }
@@ -85,14 +77,14 @@ public class Arena extends JPanel {
         // When someone loses
         if (playersLost.size() > 0) {
             for (Player player : playersLost) {
-                player.setState(Player.DEAD);
+                player.setAlive(false);
             }
         }
 
         // Get how many players remaining
         int playersRemaining = 0;
         for (Player player : players) {
-            if (player.getState() == Player.ALIVE) {
+            if (player.isAlive()) {
                 playersRemaining++;
             }
         }
@@ -108,7 +100,7 @@ public class Arena extends JPanel {
             // before the loop ends, making them another winner
             boolean winnerFound = false;
             for (Player player : players) {
-                if (!winnerFound && player.getState() == Player.ALIVE) {
+                if (!winnerFound && player.isAlive()) {
                     for (MatchEndListener matchEndListener : this.matchEndListeners) {
                         matchEndListener.matchEnded(player);
                         winnerFound = true;

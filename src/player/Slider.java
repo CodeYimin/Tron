@@ -1,4 +1,4 @@
-package entities;
+package player;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,9 +45,8 @@ public class Slider {
 		frame.add(panel);
 		frame.setSize(420, 420);
 		frame.setVisible(true);
-		
-	}
 
+	}
 
 	public int getValue() {
 		return slider.getValue();

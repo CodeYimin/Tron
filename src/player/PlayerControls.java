@@ -1,4 +1,4 @@
-package entities;
+package player;
 
 import java.awt.event.KeyEvent;
 

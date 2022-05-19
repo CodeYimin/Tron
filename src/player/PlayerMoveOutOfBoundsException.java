@@ -1,4 +1,4 @@
-package entities;
+package player;
 
 public class PlayerMoveOutOfBoundsException extends RuntimeException {
 

@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import entities.Slider;
+import player.Slider;
 import screens.GameScreen;
 
 public class Game extends JFrame {

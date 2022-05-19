@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 import components.Arena;
 import components.Scoreboard;
 import core.Updatable;
-import entities.Player;
-import entities.PlayerControls;
 import misc.WidthHeight;
 import misc.XY;
+import player.Player;
+import player.PlayerControls;
 
 public class GameScreen extends Box implements Updatable {
     private JPanel arenaContainer;
