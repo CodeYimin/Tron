@@ -1,8 +1,8 @@
 import core.Game;
-import misc.Consts;
+import misc.Const;
 
 public class Main {
     public static void main(String[] args) {
-        new Game("Tron", Consts.WINDOW_WIDTH, Consts.WINDOW_HEIGHT);
+        new Game("Tron", Const.DEFAULT_WINDOW_WIDTH, Const.DEFAULT_WINDOW_HEIGHT);
     }
 }

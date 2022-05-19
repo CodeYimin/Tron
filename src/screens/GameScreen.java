@@ -2,7 +2,6 @@ package screens;
 
 import java.awt.Color;
 import java.awt.GridBagLayout;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -11,6 +10,7 @@ import javax.swing.JPanel;
 import components.Arena;
 import components.Scoreboard;
 import core.Updatable;
+import misc.Const;
 import misc.WidthHeight;
 import misc.XY;
 import player.Player;
@@ -22,15 +22,12 @@ public class GameScreen extends JPanel implements Updatable {
     private Scoreboard scoreboard;
     private ArrayList<Player> players = new ArrayList<>();
 
-    public GameScreen() {
-        // super(BoxLayout.Y_AXIS);
+    public GameScreen(WidthHeight arenaSize) {
         super.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         super.setFocusable(true);
-        // super.requestFocusInWindow();
-        // requestFocus();
 
         this.arenaContainer = new JPanel(new GridBagLayout());
-        this.arena = new Arena(new WidthHeight(150, 100));
+        this.arena = new Arena(arenaSize);
         this.scoreboard = new Scoreboard();
 
         arenaContainer.add(this.arena);
@@ -38,12 +35,16 @@ public class GameScreen extends JPanel implements Updatable {
         super.add(this.arenaContainer);
         super.add(this.scoreboard);
 
-        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q);
-        PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+        XY player1DefaultPos = XY.ZERO;
+        XY player2DefaultPos = new XY(arenaSize.getWidth() - 1, arenaSize.getHeight() - 1);
+        XY player1DefaultVelocity = XY.DOWN;
+        XY player2DefaultVelocity = XY.UP;
+        PlayerControls player1Controls = Const.DEFAULT_PLAYER_ONE_CONTROLS;
+        PlayerControls player2Controls = Const.DEFAULT_PLAYER_TWO_CONTROLS;
         Color player1Color = new Color(157, 239, 255);
         Color player2Color = new Color(253, 193, 1);
-        Player player1 = new Player(this.arena, new XY(0, 0), XY.DOWN, player1Controls, player1Color);
-        Player player2 = new Player(this.arena, new XY(this.arena.getDimensions()).subtract(1), XY.UP, player2Controls, player2Color);
+        Player player1 = new Player(this.arena, player1DefaultPos, player1DefaultVelocity, player1Controls, player1Color);
+        Player player2 = new Player(this.arena, player2DefaultPos, player2DefaultVelocity, player2Controls, player2Color);
         this.addPlayer(player1);
         this.addPlayer(player2);
 

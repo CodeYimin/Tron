@@ -9,13 +9,16 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import misc.Const;
+import misc.WidthHeight;
 import screens.GameScreen;
 import screens.MenuScreen;
 
 public class Game extends JFrame {
-    public int fps = 30;
+    public int fps = Const.DEFAULT_FPS;
     private ArrayList<Updatable> updatables = new ArrayList<>();
     private MenuScreen menuScreen;
+    private WidthHeight arenaSize = Const.DEFAULT_ARENA_SIZE;
 
     public Game(String title, int width, int height) {
         super(title);
@@ -28,7 +31,7 @@ public class Game extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Game.super.setVisible(false);
                 Game.super.remove(menuScreen);
-                GameScreen gameScreen = new GameScreen();
+                GameScreen gameScreen = new GameScreen(arenaSize);
                 Game.this.addUpdatable(gameScreen);
                 Game.super.add(gameScreen);
                 Game.super.setVisible(true);
@@ -39,6 +42,20 @@ public class Game extends JFrame {
             public void stateChanged(ChangeEvent e) {
                 JSlider slider = (JSlider) e.getSource();
                 Game.this.fps = slider.getValue();
+            }
+        });
+        menuScreen.addWidthSliderListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider slider = (JSlider) e.getSource();
+                Game.this.arenaSize = new WidthHeight(slider.getValue(), Game.this.arenaSize.getHeight());
+            }
+        });
+        menuScreen.addHeightSliderListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider slider = (JSlider) e.getSource();
+                Game.this.arenaSize = new WidthHeight(Game.this.arenaSize.getWidth(), slider.getValue());
             }
         });
         super.add(menuScreen);

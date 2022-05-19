@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
 import components.Slider;
+import misc.Const;
 
 public class MenuScreen extends JPanel {
     public static final String TITLE = "TRON";
@@ -29,9 +30,9 @@ public class MenuScreen extends JPanel {
 
         this.title = new JLabel("TRON", JLabel.CENTER);
         this.playButton = new JButton("Play");
-        this.speedSlider = new Slider("Game speed: ${value}", 10, 100, 30, 45, 5);
-        this.widthSlider = new Slider("Arena Width: ${value}", 30, 100, 50, 35, 5);
-        this.heightSlider = new Slider("Arena Height: ${value}", 30, 100, 50, 35, 5);
+        this.speedSlider = new Slider("Game speed: ${value}", 10, 100, Const.DEFAULT_FPS, 45, 10);
+        this.widthSlider = new Slider("Arena Width: ${value}", 30, 300, Const.DEFAULT_ARENA_SIZE.getWidth(), 90, 30);
+        this.heightSlider = new Slider("Arena Height: ${value}", 30, 300, Const.DEFAULT_ARENA_SIZE.getHeight(), 90, 30);
 
         JPanel sliders = new JPanel(new GridBagLayout());
         GridBagConstraints slidersGbc = new GridBagConstraints();
@@ -60,6 +61,14 @@ public class MenuScreen extends JPanel {
 
     public void addSpeedSliderListener(ChangeListener listener) {
         this.speedSlider.addChangeListener(listener);
+    }
+
+    public void addWidthSliderListener(ChangeListener listener) {
+        this.widthSlider.addChangeListener(listener);
+    }
+
+    public void addHeightSliderListener(ChangeListener listener) {
+        this.heightSlider.addChangeListener(listener);
     }
 
     private void updateTitleSize() {
