@@ -5,13 +5,16 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import misc.Vector;
-import panels.Arena;
+import components.Arena;
+import misc.XY;
 
 public class Player implements KeyListener {
+    // Player States
     public static final int ALIVE = 1;
     public static final int DEAD = 0;
     public static final int INACTIVE = -1;
+
+    // General variables
     private Arena arena;
     private PlayerControls controls;
     private Color color;
@@ -19,16 +22,66 @@ public class Player implements KeyListener {
     private int state;
 
     // Position
-    private Vector defaultHeadPosition;
-    private Vector headPosition;
+    private XY defaultHeadPosition;
+    private XY headPosition;
     private boolean[][] bodyPositions;
 
     // Velocity
-    private Vector defaultHeadVelocity;
-    private Vector headVelocity;
-    private Vector prevHeadVelocity;
+    private XY defaultHeadVelocity;
+    private XY headVelocity;
+    private XY prevHeadVelocity;
 
-    public Player(Arena arena, Vector defaultHeadPosition, Vector defaultHeadVelocity, PlayerControls controls, Color color) {
+    // Getters and setters
+    public XY getHeadPosition() {
+        return this.headPosition;
+    }
+
+    public Arena getArena() {
+        return this.arena;
+    }
+
+    public void setArena(Arena arena) {
+        this.arena = arena;
+        reset();
+    }
+
+    public PlayerControls getControls() {
+        return this.controls;
+    }
+
+    public void setControls(PlayerControls newPlayerControls) {
+        this.controls = newPlayerControls;
+    }
+
+    public boolean[][] getBodyPositions() {
+        return this.bodyPositions;
+    }
+
+    public XY getHeadVelocity() {
+        return this.headVelocity;
+    }
+
+    public void setHeadVelocity(XY velocity) {
+        this.headVelocity = velocity;
+    }
+
+    public int getState() {
+        return this.state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public void addScore(int amount) {
+        this.score += amount;
+    }
+
+    public Player(Arena arena, XY defaultHeadPosition, XY defaultHeadVelocity, PlayerControls controls, Color color) {
         this.arena = arena;
         this.defaultHeadPosition = defaultHeadPosition;
         this.defaultHeadVelocity = defaultHeadVelocity;
@@ -39,45 +92,14 @@ public class Player implements KeyListener {
         reset();
     }
 
-    public Vector getHeadPosition() {
-        return this.headPosition;
-    }
-    public Arena getArena() {
-        return this.arena;
-    }
-    public void setArena(Arena arena) {
-        this.arena = arena;
-        reset();
-    }
-    public PlayerControls getControls() {
-        return this.controls;
-    }
-    public void setControls(PlayerControls newPlayerControls) {
-        this.controls = newPlayerControls;
-    }
-    public boolean[][] getBodyPositions() {
-        return this.bodyPositions;
-    }
-    public Vector getHeadVelocity() {
-        return this.headVelocity;
-    }
-    public void setHeadVelocity(Vector velocity) {
-        this.headVelocity = velocity;
-    }
-    public int getState() {
-        return this.state;
-    }
-    public void setState(int state) {
-        this.state = state;
-    }
-    public int getScore() {
-        return this.score;
-    }
-    public void addScore(int amount) {
-        this.score += amount;
+    public void reset() {
+        this.headPosition = this.defaultHeadPosition;
+        this.headVelocity = this.defaultHeadVelocity;
+        this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
+        this.state = Player.ALIVE;
     }
 
-    public boolean collidesWith(Player other) {
+    public boolean headCollidesWith(Player other) {
         if (this.getArena() != other.getArena()) {
             return false;
         }
@@ -92,20 +114,13 @@ public class Player implements KeyListener {
         }
     }
 
-    public void reset() {
-        this.headPosition = this.defaultHeadPosition;
-        this.headVelocity = this.defaultHeadVelocity;
-        this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
-        this.state = Player.ALIVE;
-    }
-
     public void move() throws PlayerMoveOutOfBoundsException {
-        if (this.state == Player.DEAD || this.state == Player.INACTIVE || this.headVelocity.equals(Vector.ZERO)) {
+        if (this.state == Player.DEAD || this.state == Player.INACTIVE || this.headVelocity.equals(XY.ZERO)) {
             return;
         }
 
         // Create new head position and check if it is in bounds
-        Vector newHeadPosition = this.headPosition.add(this.headVelocity);
+        XY newHeadPosition = this.headPosition.add(this.headVelocity);
         if (!newHeadPosition.inBounds(this.arena.getGrid())) {
             throw new PlayerMoveOutOfBoundsException();
         }
@@ -119,30 +134,20 @@ public class Player implements KeyListener {
 
     public void draw(Graphics g) {
         int tileSize = this.arena.getScreenTileSize();
-        int offsetX = this.arena.getScreenOffsetX();
-        int offsetY = this.arena.getScreenOffsetY();
 
         // Draw body
         g.setColor(color);
         for (int i = 0; i < this.bodyPositions.length; i++) {
             for (int j = 0; j < this.bodyPositions[i].length; j++) {
                 if (this.bodyPositions[i][j]) {
-                    g.fillRect(
-                            i * tileSize + offsetX,
-                            j * tileSize + offsetY,
-                            tileSize,
-                            tileSize);
+                    g.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                 }
             }
         }
 
         // Draw head
         g.setColor(Color.WHITE);
-        g.fillRect(
-                this.headPosition.getX() * tileSize + offsetX,
-                this.headPosition.getY() * tileSize + offsetY,
-                tileSize,
-                tileSize);
+        g.fillRect(this.headPosition.getX() * tileSize, this.headPosition.getY() * tileSize, tileSize, tileSize);
     }
 
     @Override
@@ -151,17 +156,17 @@ public class Player implements KeyListener {
             return;
         }
 
-        Vector newHeadVelocity;
+        XY newHeadVelocity;
 
         int key = e.getKeyCode();
         if (key == this.controls.getLeftKey()) {
-            newHeadVelocity = Vector.LEFT;
+            newHeadVelocity = XY.LEFT;
         } else if (key == this.controls.getRightKey()) {
-            newHeadVelocity = Vector.RIGHT;
+            newHeadVelocity = XY.RIGHT;
         } else if (key == this.controls.getUpKey()) {
-            newHeadVelocity = Vector.UP;
+            newHeadVelocity = XY.UP;
         } else if (key == this.controls.getDownKey()) {
-            newHeadVelocity = Vector.DOWN;
+            newHeadVelocity = XY.DOWN;
         } else {
             if (key == this.controls.getHackKey()) {
                 this.arena.useHack(this);

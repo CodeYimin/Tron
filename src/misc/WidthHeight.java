@@ -1,10 +1,10 @@
 package misc;
 
-public class Dimension {
+public class WidthHeight {
     private int width;
     private int height;
 
-    public Dimension(int width, int height) {
+    public WidthHeight(int width, int height) {
         this.width = width;
         this.height = height;
     }

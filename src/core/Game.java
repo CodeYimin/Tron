@@ -1,27 +1,30 @@
 package core;
 
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
-import misc.Dimension;
-import panels.Arena;
+import screens.GameScreen;
 
 public class Game extends JFrame {
     public static int FRAMES_PER_SECOND = 100;
-    private Arena arena;
+
+    private ArrayList<Updatable> updatables = new ArrayList<>();
 
     public Game(String title, int width, int height) {
         super(title);
 
         // Set up the window
-        this.setSize(width, height);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setSize(width, height);
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Setup arena panel
-        this.arena = new Arena(this, new Dimension(300, 200));
-        this.add(this.arena);
+        // Add the game screen
+        GameScreen gameScreen = new GameScreen();
+        this.addUpdatable(gameScreen);
+        super.add(gameScreen);
 
         // Make the window and panels visible
-        this.setVisible(true);
+        super.setVisible(true);
 
         // Start game loop
         this.startLoop();
@@ -29,9 +32,12 @@ public class Game extends JFrame {
 
     private void startLoop() {
         while (true) {
-            this.arena.repaint();
-            this.arena.update();
+            // Update all updatables
+            for (Updatable updatable : this.updatables) {
+                updatable.update();
+            }
 
+            // Delay to match the desired FPS
             try {
                 Thread.sleep(1000 / Game.FRAMES_PER_SECOND);
             } catch (InterruptedException e) {
@@ -40,7 +46,7 @@ public class Game extends JFrame {
         }
     }
 
-    public void endRound() {
-        
+    public void addUpdatable(Updatable updatable) {
+        this.updatables.add(updatable);
     }
 }
