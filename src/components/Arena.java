@@ -3,7 +3,6 @@ package components;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -12,27 +11,27 @@ import entities.Player;
 import entities.PlayerControls;
 import entities.PlayerMoveOutOfBoundsException;
 import misc.WidthHeight;
-import misc.XY;
 
 public class Arena extends JPanel {
-    private WidthHeight grid;
-    private ArrayList<Player> players = new ArrayList<>();
+    private WidthHeight dimensions;
     private boolean hackUsed = false;
+    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<MatchEndListener> matchEndListeners = new ArrayList<>();
 
-    public WidthHeight getGrid() {
-        return this.grid;
+    public WidthHeight getDimensions() {
+        return this.dimensions;
     }
 
     public int getScreenTileSize() {
-        return Math.min(this.getParent().getWidth() / this.grid.getWidth(), this.getParent().getHeight() / this.grid.getHeight());
+        return Math.min(this.getParent().getWidth() / this.dimensions.getWidth(), this.getParent().getHeight() / this.dimensions.getHeight());
     }
 
     public int getScreenHeight() {
-        return this.getScreenTileSize() * this.grid.getHeight();
+        return this.getScreenTileSize() * this.dimensions.getHeight();
     }
 
     public int getScreenWidth() {
-        return this.getScreenTileSize() * this.grid.getWidth();
+        return this.getScreenTileSize() * this.dimensions.getWidth();
     }
 
     public int getScreenOffsetX() {
@@ -43,22 +42,18 @@ public class Arena extends JPanel {
         return (this.getHeight() - this.getScreenHeight()) / 2;
     }
 
+    public void addPlayer(Player player) {
+        this.players.add(player);
+        super.addKeyListener(player);
+    }
+
+    public void addMatchEndListener(MatchEndListener matchEndListener) {
+        this.matchEndListeners.add(matchEndListener);
+    }
+
     public Arena(WidthHeight grid) {
         super.setFocusable(true);
-        this.grid = grid;
-
-        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q);
-        PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-        Color player1Color = new Color(157, 239, 255);
-        Color player2Color = new Color(253, 193, 1);
-        Player player1 = new Player(this, new XY(0, 0), XY.DOWN, player1Controls, player1Color);
-        Player player2 = new Player(this, new XY(this.grid).subtract(1), XY.UP, player2Controls, player2Color);
-        this.players.add(player1);
-        this.players.add(player2);
-
-        for (Player player : this.players) {
-            super.addKeyListener(player);
-        }
+        this.dimensions = grid;
     }
 
     public void update() {
@@ -82,7 +77,7 @@ public class Arena extends JPanel {
                     playerACollided = true;
                 }
             }
-            if (playerACollided) {
+            if (playerACollided && playerA.getState() != Player.DEAD) {
                 playersLost.add(playerA);
             }
             ;
@@ -95,19 +90,43 @@ public class Arena extends JPanel {
             }
         }
 
-        // Get how many players remaining to determine whether to end the game
+        // Get how many players remaining
         int playersRemaining = 0;
         for (Player player : players) {
             if (player.getState() == Player.ALIVE) {
                 playersRemaining++;
             }
         }
-        if (playersRemaining <= 1) {
-            // game.endRound();
+
+        // Emit match end events
+        if (playersRemaining == 0) {
+            for (MatchEndListener matchEndListener : this.matchEndListeners) {
+                matchEndListener.matchEnded(null);
+            }
+        } else if (playersRemaining == 1) {
+            // Track if winner is found to avoid case where a match end listener resets the
+            // players, resulting in dead players becoming alive again
+            // before the loop ends, making them another winner
+            boolean winnerFound = false;
+            for (Player player : players) {
+                if (!winnerFound && player.getState() == Player.ALIVE) {
+                    for (MatchEndListener matchEndListener : this.matchEndListeners) {
+                        matchEndListener.matchEnded(player);
+                        winnerFound = true;
+                    }
+                }
+            }
         }
 
         // Rerender the screen
         super.repaint();
+    }
+
+    public void reset() {
+        for (Player player : this.players) {
+            player.reset();
+        }
+        this.hackUsed = false;
     }
 
     public void useHack(Player hacker) {
@@ -150,5 +169,13 @@ public class Arena extends JPanel {
     public Dimension getPreferredSize() {
         Dimension dimension = new Dimension(getScreenWidth(), getScreenHeight());
         return dimension;
+    }
+
+    public static interface PlayerWinListener {
+        public void playerWon(Player player);
+    }
+
+    public static interface MatchEndListener {
+        public void matchEnded(Player winner);
     }
 }

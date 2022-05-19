@@ -53,6 +53,10 @@ public class Player implements KeyListener {
         this.controls = newPlayerControls;
     }
 
+    public Color getColor() {
+        return this.color;
+    }
+
     public boolean[][] getBodyPositions() {
         return this.bodyPositions;
     }
@@ -93,9 +97,9 @@ public class Player implements KeyListener {
     }
 
     public void reset() {
+        this.bodyPositions = new boolean[this.arena.getDimensions().getWidth()][this.arena.getDimensions().getHeight()];
         this.headPosition = this.defaultHeadPosition;
         this.headVelocity = this.defaultHeadVelocity;
-        this.bodyPositions = new boolean[this.arena.getGrid().getWidth()][this.arena.getGrid().getHeight()];
         this.state = Player.ALIVE;
     }
 
@@ -121,7 +125,7 @@ public class Player implements KeyListener {
 
         // Create new head position and check if it is in bounds
         XY newHeadPosition = this.headPosition.add(this.headVelocity);
-        if (!newHeadPosition.inBounds(this.arena.getGrid())) {
+        if (!newHeadPosition.inBounds(this.arena.getDimensions())) {
             throw new PlayerMoveOutOfBoundsException();
         }
 
