@@ -27,16 +27,14 @@ public class Game extends JFrame {
         this.addUpdatable(gameScreen);
         super.add(gameScreen);
 
-        Slider slider = new Slider();
-
         // Make the window and panels visible
         super.setVisible(true);
 
-        slider = new Slider();
-        slider.addChangeListener(new ChangeListener() {
+        this.slider = new Slider();
+        this.slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                Game.this.fps = slider.getValue();
+                Game.this.fps = Game.this.slider.getValue();
             }
         });
         // Start game loop
