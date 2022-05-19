@@ -36,16 +36,14 @@ public class Arena extends JPanel {
 
     public void addPlayer(Player player) {
         this.players.add(player);
-        super.addKeyListener(player);
     }
 
     public void addMatchEndListener(MatchEndListener matchEndListener) {
         this.matchEndListeners.add(matchEndListener);
     }
 
-    public Arena(WidthHeight grid) {
-        super.setFocusable(true);
-        this.dimensions = grid;
+    public Arena(WidthHeight dimensions) {
+        this.dimensions = dimensions;
     }
 
     public void update() {

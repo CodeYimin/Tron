@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -17,14 +16,18 @@ import misc.XY;
 import player.Player;
 import player.PlayerControls;
 
-public class GameScreen extends Box implements Updatable {
+public class GameScreen extends JPanel implements Updatable {
     private JPanel arenaContainer;
     private Arena arena;
     private Scoreboard scoreboard;
     private ArrayList<Player> players = new ArrayList<>();
 
     public GameScreen() {
-        super(BoxLayout.Y_AXIS);
+        // super(BoxLayout.Y_AXIS);
+        super.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        super.setFocusable(true);
+        // super.requestFocusInWindow();
+        // requestFocus();
 
         this.arenaContainer = new JPanel(new GridBagLayout());
         this.arena = new Arena(new WidthHeight(150, 100));
@@ -48,6 +51,7 @@ public class GameScreen extends Box implements Updatable {
     }
 
     public void addPlayer(Player player) {
+        super.addKeyListener(player);
         this.players.add(player);
         this.arena.addPlayer(player);
         this.scoreboard.addPlayer(player);

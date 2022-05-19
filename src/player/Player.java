@@ -100,6 +100,7 @@ public class Player implements KeyListener {
         this.controls = this.defaultControls;
         this.headPosition = this.defaultHeadPosition;
         this.headVelocity = this.defaultHeadVelocity;
+        this.prevHeadVelocity = this.defaultHeadVelocity;
         this.bodyPositions = new boolean[this.arena.getDimensions().getWidth()][this.arena.getDimensions().getHeight()];
         this.alive = true;
     }

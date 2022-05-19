@@ -1,43 +1,49 @@
 package core;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import player.Slider;
 import screens.GameScreen;
+import screens.MenuScreen;
 
 public class Game extends JFrame {
     public int fps = 30;
-    Slider slider;
-
     private ArrayList<Updatable> updatables = new ArrayList<>();
+    private MenuScreen menuScreen;
 
     public Game(String title, int width, int height) {
         super(title);
-
-        // Set up the window
         super.setSize(width, height);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Add the game screen
-        GameScreen gameScreen = new GameScreen();
-        this.addUpdatable(gameScreen);
-        super.add(gameScreen);
-
-        // Make the window and panels visible
-        super.setVisible(true);
-
-        this.slider = new Slider();
-        this.slider.addChangeListener(new ChangeListener() {
+        this.menuScreen = new MenuScreen();
+        menuScreen.addPlayButtonListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                Game.this.fps = Game.this.slider.getValue();
+            public void actionPerformed(ActionEvent e) {
+                Game.super.setVisible(false);
+                Game.super.remove(menuScreen);
+                GameScreen gameScreen = new GameScreen();
+                Game.this.addUpdatable(gameScreen);
+                Game.super.add(gameScreen);
+                Game.super.setVisible(true);
             }
         });
-        // Start game loop
+        menuScreen.addSpeedSliderListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider slider = (JSlider) e.getSource();
+                Game.this.fps = slider.getValue();
+            }
+        });
+        super.add(menuScreen);
+
+        super.setVisible(true);
         this.startLoop();
     }
 
