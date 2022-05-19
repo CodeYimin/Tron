@@ -29,8 +29,8 @@ public class Arena extends JPanel {
         Color player1Color = new Color(157, 239, 255);
         Color player2Color = new Color(253, 193, 1);
 
-        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q);
-        PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+        PlayerControls player1Controls = PlayerControls.HACKER_CONTROLS;
+        PlayerControls player2Controls = PlayerControls.DEFAULT_CONTROLS;
         Player player1 = new Player(this, new Vector(0, 0), Vector.DOWN, player1Controls, player1Color);
         Player player2 = new Player(this, new Vector(this.grid).subtract(1), Vector.UP, player2Controls, player2Color);
         this.players.add(player1);
@@ -104,10 +104,9 @@ public class Arena extends JPanel {
         if(this.hackUsed) {
             return;
         }
-        PlayerControls newControls = new PlayerControls(KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
         for(Player player: players) {
             if(player != playerUsed) {
-                player.setControls(newControls);
+                player.setControls(PlayerControls.MESSED_CONTROLS);
             }
         }
         new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
