@@ -16,6 +16,7 @@ public class Player implements KeyListener {
 
     // General variables
     private Arena arena;
+    private PlayerControls defaultControls;
     private PlayerControls controls;
     private Color color;
     private int score;
@@ -42,7 +43,7 @@ public class Player implements KeyListener {
 
     public void setArena(Arena arena) {
         this.arena = arena;
-        reset();
+        respawn();
     }
 
     public PlayerControls getControls() {
@@ -85,21 +86,19 @@ public class Player implements KeyListener {
         this.score += amount;
     }
 
-    public Player(Arena arena, XY defaultHeadPosition, XY defaultHeadVelocity, PlayerControls controls, Color color) {
+    public Player(Arena arena, XY defaultHeadPosition, XY defaultHeadVelocity, PlayerControls defaultControls, Color color) {
         this.arena = arena;
         this.defaultHeadPosition = defaultHeadPosition;
         this.defaultHeadVelocity = defaultHeadVelocity;
-        this.controls = controls;
+        this.defaultControls = defaultControls;
         this.color = color;
         this.score = 0;
 
-        reset();
+        respawn();
     }
 
-    public void reset() {
-        if(this.controls != PlayerControls.HACKER_CONTROLS) {
-            this.controls = PlayerControls.NORMAL_CONTROLS;
-        }
+    public void respawn() {
+        this.controls = this.defaultControls;
         this.bodyPositions = new boolean[this.arena.getDimensions().getWidth()][this.arena.getDimensions().getHeight()];
         this.headPosition = this.defaultHeadPosition;
         this.headVelocity = this.defaultHeadVelocity;

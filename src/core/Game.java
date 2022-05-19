@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import entities.Slider;
 import screens.GameScreen;
 
 public class Game extends JFrame {
@@ -22,6 +23,8 @@ public class Game extends JFrame {
         GameScreen gameScreen = new GameScreen();
         this.addUpdatable(gameScreen);
         super.add(gameScreen);
+
+        Slider slider = new Slider();
 
         // Make the window and panels visible
         super.setVisible(true);

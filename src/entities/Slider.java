@@ -1,9 +1,13 @@
 package entities;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.Dimension;
+import java.awt.Font;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 
 public class Slider {

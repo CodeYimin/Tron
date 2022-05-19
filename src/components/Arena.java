@@ -60,7 +60,7 @@ public class Arena extends JPanel {
         ArrayList<Player> playersLost = new ArrayList<Player>();
 
         // Move players
-        for (Player player: this.players) {
+        for (Player player : this.players) {
             try {
                 player.move();
             } catch (PlayerMoveOutOfBoundsException ex) {
@@ -123,7 +123,7 @@ public class Arena extends JPanel {
 
     public void reset() {
         for (Player player : this.players) {
-            player.reset();
+            player.respawn();
         }
     }
 
@@ -132,9 +132,14 @@ public class Arena extends JPanel {
             return;
         }
 
-        for (Player player: players) {
+        for (Player player : players) {
             if (player != hacker) {
-                player.setControls(PlayerControls.INVERTED_CONTROLS);
+                PlayerControls originalControls = player.getControls();
+                PlayerControls invertedControls = new PlayerControls(
+                        originalControls.getDownKey(), originalControls.getUpKey(),
+                        originalControls.getRightKey(), originalControls.getLeftKey());
+
+                player.setControls(invertedControls);
             }
         }
         this.hackUsed = true;

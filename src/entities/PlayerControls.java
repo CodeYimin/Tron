@@ -3,9 +3,6 @@ package entities;
 import java.awt.event.KeyEvent;
 
 public class PlayerControls {
-    public static final PlayerControls NORMAL_CONTROLS = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-    public static final PlayerControls HACKER_CONTROLS = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q);
-    public static final PlayerControls INVERTED_CONTROLS = new PlayerControls(KeyEvent.VK_DOWN, KeyEvent.VK_UP, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
     private final int upKey;
     private final int downKey;
     private final int leftKey;
