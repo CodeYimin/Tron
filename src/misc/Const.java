@@ -1,5 +1,6 @@
 package misc;
 
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 
 import player.PlayerControls;
@@ -20,4 +21,5 @@ public class Const {
             KeyEvent.VK_DOWN,
             KeyEvent.VK_LEFT,
             KeyEvent.VK_RIGHT);
+    public static final Font DEFAULT_FONT = new Font("Calibri", Font.PLAIN, 12);
 }

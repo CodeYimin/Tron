@@ -7,6 +7,8 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import misc.Const;
+
 public class Slider extends Box {
     String labelText;
     JLabel label;
@@ -30,6 +32,9 @@ public class Slider extends Box {
         this.labelText = labelText;
         this.label = new JLabel();
         this.updateLabel();
+
+        this.label.setFont(Const.DEFAULT_FONT.deriveFont(18f));
+        this.slider.setFont(Const.DEFAULT_FONT.deriveFont(18f));
 
         super.add(this.label);
         super.add(this.slider);

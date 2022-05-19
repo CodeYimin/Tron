@@ -30,6 +30,7 @@ public class MenuScreen extends JPanel {
 
         this.title = new JLabel("TRON", JLabel.CENTER);
         this.playButton = new JButton("Play");
+        this.playButton.setFont(Const.DEFAULT_FONT.deriveFont(20f));
         this.speedSlider = new Slider("Game speed: ${value}", 10, 100, Const.DEFAULT_FPS, 45, 10);
         this.widthSlider = new Slider("Arena Width: ${value}", 30, 300, Const.DEFAULT_ARENA_SIZE.getWidth(), 90, 30);
         this.heightSlider = new Slider("Arena Height: ${value}", 30, 300, Const.DEFAULT_ARENA_SIZE.getHeight(), 90, 30);
@@ -80,10 +81,20 @@ public class MenuScreen extends JPanel {
         this.title.setFont(new Font("Calibri", Font.BOLD, fontSize));
     }
 
+    private void updateButtonSize() {
+        if (this.playButton == null) {
+            return;
+        }
+
+        float fontSize = Math.min(super.getWidth() / MenuScreen.TITLE.length(), super.getHeight() / 8);
+        this.playButton.setFont(Const.DEFAULT_FONT.deriveFont(fontSize));
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         this.updateTitleSize();
+        this.updateButtonSize();
     }
 }
