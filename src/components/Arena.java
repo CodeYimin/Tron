@@ -60,7 +60,7 @@ public class Arena extends JPanel {
         ArrayList<Player> playersLost = new ArrayList<Player>();
 
         // Move players
-        for (Player player : this.players) {
+        for (Player player: this.players) {
             try {
                 player.move();
             } catch (PlayerMoveOutOfBoundsException ex) {
@@ -80,7 +80,6 @@ public class Arena extends JPanel {
             if (playerACollided && playerA.getState() != Player.DEAD) {
                 playersLost.add(playerA);
             }
-            ;
         }
 
         // When someone loses
@@ -126,7 +125,6 @@ public class Arena extends JPanel {
         for (Player player : this.players) {
             player.reset();
         }
-        this.hackUsed = false;
     }
 
     public void useHack(Player hacker) {
@@ -134,20 +132,11 @@ public class Arena extends JPanel {
             return;
         }
 
-        for (Player player : players) {
+        for (Player player: players) {
             if (player != hacker) {
-                PlayerControls controls = player.getControls();
-                PlayerControls invertedControls = new PlayerControls(
-                        controls.getDownKey(),
-                        controls.getUpKey(),
-                        controls.getRightKey(),
-                        controls.getLeftKey(),
-                        controls.getHackKey());
-
-                player.setControls(invertedControls);
+                player.setControls(PlayerControls.INVERTED_CONTROLS);
             }
         }
-
         this.hackUsed = true;
     }
 

@@ -35,8 +35,8 @@ public class GameScreen extends Box implements Updatable {
         super.add(this.arenaContainer);
         super.add(this.scoreboard);
 
-        PlayerControls player1Controls = new PlayerControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q);
-        PlayerControls player2Controls = new PlayerControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+        PlayerControls player1Controls = PlayerControls.HACKER_CONTROLS;
+        PlayerControls player2Controls = PlayerControls.NORMAL_CONTROLS;
         Color player1Color = new Color(157, 239, 255);
         Color player2Color = new Color(253, 193, 1);
         Player player1 = new Player(this.arena, new XY(0, 0), XY.DOWN, player1Controls, player1Color);

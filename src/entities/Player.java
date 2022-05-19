@@ -97,6 +97,9 @@ public class Player implements KeyListener {
     }
 
     public void reset() {
+        if(this.controls != PlayerControls.HACKER_CONTROLS) {
+            this.controls = PlayerControls.NORMAL_CONTROLS;
+        }
         this.bodyPositions = new boolean[this.arena.getDimensions().getWidth()][this.arena.getDimensions().getHeight()];
         this.headPosition = this.defaultHeadPosition;
         this.headVelocity = this.defaultHeadVelocity;
