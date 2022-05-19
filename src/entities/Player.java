@@ -12,7 +12,6 @@ public class Player implements KeyListener {
     // Player States
     public static final int ALIVE = 1;
     public static final int DEAD = 0;
-    public static final int INACTIVE = -1;
 
     // General variables
     private Arena arena;
@@ -121,7 +120,7 @@ public class Player implements KeyListener {
     }
 
     public void move() throws PlayerMoveOutOfBoundsException {
-        if (this.state == Player.DEAD || this.state == Player.INACTIVE || this.headVelocity.equals(XY.ZERO)) {
+        if (this.state == Player.DEAD || this.headVelocity.equals(XY.ZERO)) {
             return;
         }
 
