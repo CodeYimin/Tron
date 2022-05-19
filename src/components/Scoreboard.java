@@ -27,7 +27,7 @@ public class Scoreboard extends Box {
     }
 
     public void update() {
-        super.setPreferredSize(new Dimension(0, super.getParent().getHeight() / 10));
+        super.setPreferredSize(new Dimension(0, super.getParent().getHeight() / 8));
         super.revalidate();
 
         for (PlayerScore playerScore : playerScores) {

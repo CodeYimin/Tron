@@ -27,7 +27,7 @@ public class GameScreen extends Box implements Updatable {
         super(BoxLayout.Y_AXIS);
 
         this.arenaContainer = new JPanel(new GridBagLayout());
-        this.arena = new Arena(new WidthHeight(300, 200));
+        this.arena = new Arena(new WidthHeight(150, 100));
         this.scoreboard = new Scoreboard();
 
         arenaContainer.add(this.arena);

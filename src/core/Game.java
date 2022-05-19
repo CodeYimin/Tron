@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import screens.GameScreen;
 
 public class Game extends JFrame {
-    public static int FRAMES_PER_SECOND = 100;
+    public static int FRAMES_PER_SECOND = 30;
 
     private ArrayList<Updatable> updatables = new ArrayList<>();
 
