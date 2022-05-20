@@ -9,6 +9,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import audio.Music;
 import misc.Const;
 import misc.WidthHeight;
 import screens.GameScreen;
@@ -19,6 +20,7 @@ public class Game extends JFrame {
     private ArrayList<Updatable> updatables = new ArrayList<>();
     private MenuScreen menuScreen;
     private WidthHeight arenaSize = Const.DEFAULT_ARENA_SIZE;
+    Music music;
 
     public Game(String title, int width, int height) {
         super(title);
@@ -65,6 +67,9 @@ public class Game extends JFrame {
     }
 
     private void startLoop() {
+        music = new Music("src/audio/Music.wav");
+        music.start();
+        music.loop();
         while (true) {
             // Update all updatables
             for (Updatable updatable : this.updatables) {
