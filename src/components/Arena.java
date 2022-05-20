@@ -111,6 +111,12 @@ public class Arena extends JPanel {
         super.repaint();
     }
 
+    public void killAllPlayers() {
+        for (Player player : this.players) {
+            player.setAlive(false);
+        }
+    }
+
     public void reset() {
         for (Player player : this.players) {
             player.respawn();
