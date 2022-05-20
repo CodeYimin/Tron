@@ -145,7 +145,7 @@ public class BattleScreen extends JPanel implements Updatable {
             }
 
             if (gameOver) {
-                BattleScreen.this.music.stop();
+                BattleScreen.this.music.close();
                 return;
             }
 

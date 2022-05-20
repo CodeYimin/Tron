@@ -22,7 +22,7 @@ public class Game extends JFrame {
     public int fps = Const.DEFAULT_FPS;
     private ArrayList<Updatable> updatables = new ArrayList<>();
     private WidthHeight arenaSize = Const.DEFAULT_ARENA_SIZE;
-    Music music;
+    private Music backgroundMusic = new Music(Const.BACKGROUND_MUSIC);
 
     public Game(String title, int width, int height) {
         super(title);
@@ -31,6 +31,10 @@ public class Game extends JFrame {
 
         MenuScreen menuScreen = this.createMenuScreen();
         super.add(menuScreen);
+
+        backgroundMusic.setStartSeconds(3);
+        backgroundMusic.start();
+        backgroundMusic.loop();
 
         super.setVisible(true);
         this.startLoop();
@@ -66,6 +70,7 @@ public class Game extends JFrame {
         menuScreen.addPlayButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Game.this.backgroundMusic.stop();
                 Game.this.changeScreen(menuScreen, Game.this.createBattleScreen());
             }
         });
@@ -102,6 +107,7 @@ public class Game extends JFrame {
             public void gameOver(Player winner) {
                 Game.this.removeUpdatable(battleScreen);
                 Game.this.changeScreen(battleScreen, Game.this.createGameOverScreen(winner.getName() + " won!"));
+                Game.this.backgroundMusic.start();
             }
         });
         this.addUpdatable(battleScreen);
@@ -115,6 +121,7 @@ public class Game extends JFrame {
         gameOverScreen.addPlayAgainButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Game.this.backgroundMusic.stop();
                 Game.this.changeScreen(gameOverScreen, Game.this.createBattleScreen());
             }
         });

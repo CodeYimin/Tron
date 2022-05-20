@@ -43,6 +43,22 @@ public class Music {
         this.music.stop();
     }
 
+    public void close() {
+        if (this.music == null) {
+            return;
+        }
+
+        this.music.close();
+    }
+
+    public void setStartSeconds(int seconds) {
+        if (this.music == null) {
+            return;
+        }
+
+        this.music.setMicrosecondPosition(seconds * 1000000);
+    }
+
     public void loop() {
         if (this.music == null) {
             return;
