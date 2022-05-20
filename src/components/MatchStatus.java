@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import misc.Const;
 
 public class MatchStatus extends JPanel {
-    JLabel status;
+    private JLabel status;
 
     public MatchStatus(String status) {
         this.status = new JLabel(status);

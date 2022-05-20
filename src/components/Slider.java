@@ -10,9 +10,9 @@ import javax.swing.event.ChangeListener;
 import misc.Const;
 
 public class Slider extends Box {
-    String labelText;
-    JLabel label;
-    JSlider slider;
+    private String labelText;
+    private JLabel label;
+    private JSlider slider;
 
     public Slider(String labelText, int min, int max, int value, int majorTickSpacing, int minorTickSpacing) {
         super(BoxLayout.Y_AXIS);
