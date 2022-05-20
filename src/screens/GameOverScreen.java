@@ -6,14 +6,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
+import audio.Music;
+import core.Screen;
 import misc.Const;
 
-public class GameOverScreen extends JPanel {
-    JLabel message;
-    JButton playAgainButton;
-    JButton returnButton;
+public class GameOverScreen extends Screen {
+    private JLabel message;
+    private JButton playAgainButton;
+    private JButton returnButton;
+    private Music music;
 
     public GameOverScreen(String message) {
         super.setLayout(new GridBagLayout());
@@ -43,5 +45,17 @@ public class GameOverScreen extends JPanel {
 
     public void addReturnButtonListener(ActionListener listener) {
         this.returnButton.addActionListener(listener);
+    }
+
+    @Override
+    public void onEnter() {
+        this.music = new Music(Const.BACKGROUND_MUSIC);
+        this.music.setStartSeconds(3);
+        this.music.start();
+    }
+
+    @Override
+    public void onExit() {
+        this.music.close();
     }
 }

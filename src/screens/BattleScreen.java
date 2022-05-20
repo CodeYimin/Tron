@@ -12,6 +12,7 @@ import audio.Music;
 import components.Arena;
 import components.MatchStatus;
 import components.Scoreboard;
+import core.Screen;
 import core.Updatable;
 import misc.Const;
 import misc.WidthHeight;
@@ -19,7 +20,7 @@ import misc.XY;
 import player.Player;
 import player.PlayerControls;
 
-public class BattleScreen extends JPanel implements Updatable {
+public class BattleScreen extends Screen implements Updatable {
     private JPanel arenaContainer;
     private Arena arena;
     private Scoreboard scoreboard;
@@ -77,9 +78,6 @@ public class BattleScreen extends JPanel implements Updatable {
         this.addPlayer(player1);
         this.addPlayer(player2);
 
-        this.music = new Music(Const.BATTLE_MUSIC);
-        this.music.start();
-
         this.arena.addMatchEndListener(new MatchEndListener());
     }
 
@@ -97,6 +95,17 @@ public class BattleScreen extends JPanel implements Updatable {
     @Override
     public void update() {
         this.arena.update();
+    }
+
+    @Override
+    public void onEnter() {
+        this.music = new Music(Const.BATTLE_MUSIC);
+        music.start();
+    }
+
+    @Override
+    public void onExit() {
+        this.music.close();
     }
 
     private class MatchEndListener implements Arena.MatchEndListener {
@@ -145,7 +154,6 @@ public class BattleScreen extends JPanel implements Updatable {
             }
 
             if (gameOver) {
-                BattleScreen.this.music.close();
                 return;
             }
 

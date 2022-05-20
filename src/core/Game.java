@@ -5,12 +5,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import audio.Music;
 import misc.Const;
 import misc.WidthHeight;
 import player.Player;
@@ -22,7 +20,6 @@ public class Game extends JFrame {
     public int fps = Const.DEFAULT_FPS;
     private ArrayList<Updatable> updatables = new ArrayList<>();
     private WidthHeight arenaSize = Const.DEFAULT_ARENA_SIZE;
-    private Music backgroundMusic = new Music(Const.BACKGROUND_MUSIC);
 
     public Game(String title, int width, int height) {
         super(title);
@@ -30,13 +27,8 @@ public class Game extends JFrame {
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         MenuScreen menuScreen = this.createMenuScreen();
-        super.add(menuScreen);
+        this.enterScreen(menuScreen);
 
-        backgroundMusic.setStartSeconds(3);
-        backgroundMusic.start();
-        backgroundMusic.loop();
-
-        super.setVisible(true);
         this.startLoop();
     }
 
@@ -70,7 +62,6 @@ public class Game extends JFrame {
         menuScreen.addPlayButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Game.this.backgroundMusic.stop();
                 Game.this.changeScreen(menuScreen, Game.this.createBattleScreen());
             }
         });
@@ -107,7 +98,6 @@ public class Game extends JFrame {
             public void gameOver(Player winner) {
                 Game.this.removeUpdatable(battleScreen);
                 Game.this.changeScreen(battleScreen, Game.this.createGameOverScreen(winner.getName() + " won!"));
-                Game.this.backgroundMusic.start();
             }
         });
         this.addUpdatable(battleScreen);
@@ -121,7 +111,6 @@ public class Game extends JFrame {
         gameOverScreen.addPlayAgainButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Game.this.backgroundMusic.stop();
                 Game.this.changeScreen(gameOverScreen, Game.this.createBattleScreen());
             }
         });
@@ -135,12 +124,20 @@ public class Game extends JFrame {
         return gameOverScreen;
     }
 
-    private void changeScreen(JPanel oldScreen, JPanel newScreen) {
+    private void changeScreen(Screen oldScreen, Screen newScreen) {
+        this.exitScreen(oldScreen);
+        this.enterScreen(newScreen);
+    }
+
+    public void exitScreen(Screen screen) {
         super.setVisible(false);
-        super.remove(oldScreen);
-        super.add(newScreen);
+        screen.onExit();
+        super.remove(screen);
+    }
+
+    public void enterScreen(Screen screen) {
+        super.add(screen);
+        screen.onEnter();
         super.setVisible(true);
-        super.revalidate();
-        super.repaint();
     }
 }

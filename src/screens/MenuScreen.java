@@ -12,15 +12,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
+import audio.Music;
 import components.Slider;
+import core.Screen;
 import misc.Const;
 
-public class MenuScreen extends JPanel {
-    JLabel title;
-    JButton playButton;
-    Slider speedSlider;
-    Slider widthSlider;
-    Slider heightSlider;
+public class MenuScreen extends Screen {
+    private JLabel title;
+    private JButton playButton;
+    private Slider speedSlider;
+    private Slider widthSlider;
+    private Slider heightSlider;
+    private Music music;
 
     public MenuScreen(int defaultFps, int defaultWidth, int defaultHeight) {
         super.setLayout(new GridBagLayout());
@@ -99,5 +102,17 @@ public class MenuScreen extends JPanel {
 
         this.updateTitleSize();
         this.updateButtonSize();
+    }
+
+    @Override
+    public void onEnter() {
+        this.music = new Music(Const.BACKGROUND_MUSIC);
+        this.music.setStartSeconds(3);
+        this.music.start();
+    }
+
+    @Override
+    public void onExit() {
+        this.music.close();
     }
 }
