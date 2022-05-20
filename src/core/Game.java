@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -12,13 +13,14 @@ import javax.swing.event.ChangeListener;
 import audio.Music;
 import misc.Const;
 import misc.WidthHeight;
+import player.Player;
 import screens.BattleScreen;
+import screens.GameOverScreen;
 import screens.MenuScreen;
 
 public class Game extends JFrame {
     public int fps = Const.DEFAULT_FPS;
     private ArrayList<Updatable> updatables = new ArrayList<>();
-    private MenuScreen menuScreen;
     private WidthHeight arenaSize = Const.DEFAULT_ARENA_SIZE;
     Music music;
 
@@ -27,16 +29,48 @@ public class Game extends JFrame {
         super.setSize(width, height);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.menuScreen = new MenuScreen();
+        MenuScreen menuScreen = this.createMenuScreen();
+        super.add(menuScreen);
+
+        music = new Music("../assets/audio/Music.wav");
+        music.start();
+        music.loop();
+
+        super.setVisible(true);
+        this.startLoop();
+    }
+
+    private void startLoop() {
+        while (true) {
+            // Update all updatables
+            for (int i = 0; i < updatables.size(); i++) {
+                updatables.get(i).update();
+            }
+
+            // Delay to match the desired FPS
+            try {
+                Thread.sleep(1000 / this.fps);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addUpdatable(Updatable updatable) {
+        this.updatables.add(updatable);
+    }
+
+    public void removeUpdatable(Updatable updatable) {
+        this.updatables.remove(updatable);
+    }
+
+    private MenuScreen createMenuScreen() {
+        MenuScreen menuScreen = new MenuScreen(this.fps, this.arenaSize.getWidth(), this.arenaSize.getHeight());
+
         menuScreen.addPlayButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Game.super.setVisible(false);
-                Game.super.remove(menuScreen);
-                BattleScreen gameScreen = new BattleScreen(arenaSize);
-                Game.this.addUpdatable(gameScreen);
-                Game.super.add(gameScreen);
-                Game.super.setVisible(true);
+                Game.this.changeScreen(menuScreen, Game.this.createBattleScreen());
             }
         });
         menuScreen.addSpeedSliderListener(new ChangeListener() {
@@ -60,32 +94,50 @@ public class Game extends JFrame {
                 Game.this.arenaSize = new WidthHeight(Game.this.arenaSize.getWidth(), slider.getValue());
             }
         });
-        super.add(menuScreen);
 
+        return menuScreen;
+    }
+
+    private BattleScreen createBattleScreen() {
+        BattleScreen battleScreen = new BattleScreen(arenaSize, Const.MAX_WINS);
+
+        battleScreen.addGameOverListener(new BattleScreen.GameOverListener() {
+            @Override
+            public void gameOver(Player winner) {
+                Game.this.removeUpdatable(battleScreen);
+                Game.this.changeScreen(battleScreen, Game.this.createGameOverScreen());
+            }
+        });
+        this.addUpdatable(battleScreen);
+
+        return battleScreen;
+    }
+
+    private GameOverScreen createGameOverScreen() {
+        GameOverScreen gameOverScreen = new GameOverScreen("Player 1 Wins!");
+
+        gameOverScreen.addPlayAgainButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Game.this.changeScreen(gameOverScreen, createBattleScreen());
+            }
+        });
+        gameOverScreen.addReturnButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Game.this.changeScreen(gameOverScreen, Game.this.createMenuScreen());
+            }
+        });
+
+        return gameOverScreen;
+    }
+
+    private void changeScreen(JPanel oldScreen, JPanel newScreen) {
+        super.setVisible(false);
+        super.remove(oldScreen);
+        super.add(newScreen);
         super.setVisible(true);
-        this.startLoop();
-    }
-
-    private void startLoop() {
-        music = new Music("../assets/audio/Music.wav");
-        music.start();
-        music.loop();
-        while (true) {
-            // Update all updatables
-            for (Updatable updatable : this.updatables) {
-                updatable.update();
-            }
-
-            // Delay to match the desired FPS
-            try {
-                Thread.sleep(1000 / this.fps);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void addUpdatable(Updatable updatable) {
-        this.updatables.add(updatable);
+        super.revalidate();
+        super.repaint();
     }
 }

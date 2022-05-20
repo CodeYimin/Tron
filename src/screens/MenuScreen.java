@@ -22,24 +22,19 @@ public class MenuScreen extends JPanel {
     Slider widthSlider;
     Slider heightSlider;
 
-    public MenuScreen() {
+    public MenuScreen(int defaultFps, int defaultWidth, int defaultHeight) {
         super.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.PAGE_START;
 
         this.title = new JLabel("TRON", JLabel.CENTER);
         this.playButton = new JButton("Play");
         this.playButton.setFont(Const.DEFAULT_FONT.deriveFont(20f));
-        this.speedSlider = new Slider("Game speed: ${value}", 10, 100, Const.DEFAULT_FPS, 45, 10);
-        this.widthSlider = new Slider("Arena Width: ${value}", 30, 300, Const.DEFAULT_ARENA_SIZE.getWidth(), 90, 30);
-        this.heightSlider = new Slider("Arena Height: ${value}", 30, 300, Const.DEFAULT_ARENA_SIZE.getHeight(), 90, 30);
+        this.speedSlider = new Slider("Game speed: ${value}", 10, 100, defaultFps, 45, 10);
+        this.widthSlider = new Slider("Arena Width: ${value}", 30, 300, defaultWidth, 90, 30);
+        this.heightSlider = new Slider("Arena Height: ${value}", 30, 300, defaultHeight, 90, 30);
 
-        JPanel sliders = new JPanel(new GridBagLayout());
-        GridBagConstraints slidersGbc = new GridBagConstraints();
-        slidersGbc.insets = new Insets(0, 15, 0, 15);
-        sliders.add(this.speedSlider, slidersGbc);
-        sliders.add(this.widthSlider, slidersGbc);
-        sliders.add(this.heightSlider, slidersGbc);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.PAGE_START;
+        gbc.gridwidth = 3;
 
         gbc.gridy = 0;
         super.add(this.title, gbc);
@@ -48,8 +43,17 @@ public class MenuScreen extends JPanel {
         gbc.insets = new Insets(0, 0, 50, 0);
         super.add(playButton, gbc);
 
+        gbc.insets = new Insets(0, 15, 0, 15);
+        gbc.gridwidth = 1;
         gbc.gridy = 2;
-        super.add(sliders, gbc);
+        gbc.gridx = 0;
+        super.add(this.speedSlider, gbc);
+        gbc.gridx = 1;
+        super.add(this.widthSlider, gbc);
+        gbc.gridx = 2;
+        super.add(this.heightSlider, gbc);
+        gbc.gridwidth = 3;
+        gbc.insets = new Insets(0, 0, 0, 0);
 
         gbc.gridy = 3;
         super.add(new JPanel(), gbc);

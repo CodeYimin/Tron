@@ -24,11 +24,14 @@ public class BattleScreen extends JPanel implements Updatable {
     private Scoreboard scoreboard;
     private MatchStatus matchStatus;
     private ArrayList<Player> players = new ArrayList<>();
+    private int maxWins;
+    private ArrayList<GameOverListener> gameOverListeners = new ArrayList<>();
 
-    public BattleScreen(WidthHeight arenaSize) {
+    public BattleScreen(WidthHeight arenaSize, int maxWins) {
         super.setLayout(new GridBagLayout());
         super.setFocusable(true);
 
+        this.maxWins = maxWins;
         this.arena = new Arena(arenaSize);
         this.arenaContainer = new JPanel(new GridBagLayout());
         GridBagConstraints arenaContainerGbc = new GridBagConstraints();
@@ -82,6 +85,10 @@ public class BattleScreen extends JPanel implements Updatable {
         this.scoreboard.addPlayer(player);
     }
 
+    public void addGameOverListener(GameOverListener listener) {
+        this.gameOverListeners.add(listener);
+    }
+
     @Override
     public void update() {
         this.arena.update();
@@ -89,14 +96,29 @@ public class BattleScreen extends JPanel implements Updatable {
 
     private class MatchEndListener implements Arena.MatchEndListener {
         public void matchEnded(Player winner) {
+            boolean gameOver = false;
+
             if (winner != null) {
                 winner.addScore(1);
+                gameOver = winner.getScore() >= maxWins;
                 for (int i = 3; i > 0; i--) {
-                    BattleScreen.this.matchStatus.setText(winner.getName() + " wins! New round in " + i + "...");
+                    if (gameOver) {
+                        BattleScreen.this.matchStatus.setText(winner.getName() + " won the best of " + maxWins + "! Game over in " + i + "...");
+                    } else {
+                        BattleScreen.this.matchStatus.setText(winner.getName() + " wins! New round in " + i + "...");
+                    }
+
                     try {
                         Thread.sleep(1000);
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }
+
+                if (gameOver) {
+                    BattleScreen.this.matchStatus.setText("Game over!" + winner.getName() + " wins!");
+                    for (GameOverListener gameOverListener : gameOverListeners) {
+                        gameOverListener.gameOver(winner);
                     }
                 }
             } else {
@@ -110,8 +132,16 @@ public class BattleScreen extends JPanel implements Updatable {
                 }
             }
 
+            if (gameOver) {
+                return;
+            }
+
             BattleScreen.this.arena.reset();
             BattleScreen.this.matchStatus.setText("Match in progress!");
         }
+    }
+
+    public static interface GameOverListener {
+        public void gameOver(Player winner);
     }
 }
