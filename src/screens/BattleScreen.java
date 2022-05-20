@@ -123,6 +123,7 @@ public class BattleScreen extends Screen implements Updatable, Arena.MatchEndLis
             return;
         }
 
+        // Play round over sound effect
         Music roundOverMusic = new Music(Const.ROUND_OVER_MUSIC);
         Music roundStartMusic = new Music(Const.ROUND_START_MUSIC);
         roundOverMusic.start();
