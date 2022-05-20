@@ -67,7 +67,7 @@ public class Game extends JFrame {
     }
 
     private void startLoop() {
-        music = new Music("src/audio/Music.wav");
+        music = new Music("../assets/audio/Music.wav");
         music.start();
         music.loop();
         while (true) {
