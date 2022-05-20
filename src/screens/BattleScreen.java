@@ -23,7 +23,7 @@ import misc.XY;
 import player.Player;
 import player.PlayerControls;
 
-public class BattleScreen extends Screen implements Updatable {
+public class BattleScreen extends Screen implements Updatable, Arena.MatchEndListener {
     private JPanel arenaContainer;
     private Arena arena;
     private Scoreboard scoreboard;
@@ -82,7 +82,7 @@ public class BattleScreen extends Screen implements Updatable {
         this.addPlayer(player1);
         this.addPlayer(player2);
 
-        this.arena.addMatchEndListener(new MatchEndListener());
+        this.arena.addMatchEndListener(this);
     }
 
     public void addPlayer(Player player) {
@@ -112,57 +112,49 @@ public class BattleScreen extends Screen implements Updatable {
         this.music.close();
     }
 
-    private class MatchEndListener implements Arena.MatchEndListener {
-        public void matchEnded(Player winner) {
-            // Freeze all players
-            BattleScreen.this.arena.killAllPlayers();
+    @Override
+    public void matchEnded(Player winner) {
+        // Freeze all players
+        this.arena.killAllPlayers();
 
-            // Return if game is already over
-            if (BattleScreen.this.gameOver) {
+        // Return if game is already over
+        if (this.gameOver) {
+            return;
+        }
+
+        Music roundOverMusic = new Music(Const.ROUND_OVER_MUSIC);
+        Music roundStartMusic = new Music(Const.ROUND_START_MUSIC);
+        roundOverMusic.start();
+
+        if (winner != null) {
+            // Update winner's score
+            winner.addScore(1);
+            // Check if winner has won the best of x
+            if (winner.getScore() >= maxWins) {
+                this.gameOver(winner);
                 return;
             }
+        }
 
-            Music roundOverMusic = new Music(Const.ROUND_OVER_MUSIC);
-            Music roundStartMusic = new Music(Const.ROUND_START_MUSIC);
-            roundOverMusic.start();
-
-            // No winner, tie
+        // Alert new round starting
+        roundStartMusic.start();
+        for (int i = 3; i > 0; i--) {
             if (winner == null) {
-                roundStartMusic.start();
-                for (int i = 3; i > 0; i--) {
-                    BattleScreen.this.matchStatus.setText("Tie! New round in " + i + "...");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                this.matchStatus.setText("Tie! New round in " + i + "...");
             } else {
-                // Winner found
-                winner.addScore(1);
-
-                // Check if winner has won the best of x
-                if (winner.getScore() >= maxWins) {
-                    BattleScreen.this.gameOver(winner);
-                    return;
-                }
-
-                // New round starting
-                roundStartMusic.start();
-                for (int i = 3; i > 0; i--) {
-                    BattleScreen.this.matchStatus.setText(winner.getName() + " wins! New round in " + i + "...");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                this.matchStatus.setText(winner.getName() + " wins! New round in " + i + "...");
             }
 
-            // Start new round
-            BattleScreen.this.arena.reset();
-            BattleScreen.this.matchStatus.setText("Match in progress!");
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+        // Start new round
+        this.arena.reset();
+        this.matchStatus.setText("Match in progress!");
     }
 
     private void gameOver(Player winner) {
