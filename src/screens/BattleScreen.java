@@ -3,6 +3,8 @@ package screens;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.Box;
@@ -29,6 +31,7 @@ public class BattleScreen extends Screen implements Updatable {
     private int maxWins;
     private ArrayList<GameOverListener> gameOverListeners = new ArrayList<>();
     private Music music;
+    private boolean gameOver;
 
     public BattleScreen(WidthHeight arenaSize, int maxWins) {
         super.setLayout(new GridBagLayout());
@@ -110,51 +113,65 @@ public class BattleScreen extends Screen implements Updatable {
 
     private class MatchEndListener implements Arena.MatchEndListener {
         public void matchEnded(Player winner) {
+            if (gameOver) {
+                return;
+            }
+
             Music roundOverMusic = new Music(Const.ROUND_OVER_MUSIC);
             Music roundStartMusic = new Music(Const.ROUND_START_MUSIC);
             roundOverMusic.start();
 
-            boolean gameOver = false;
-            if (winner != null) {
-                winner.addScore(1);
-                gameOver = winner.getScore() >= maxWins;
-                if (!gameOver) {
+            if (!gameOver) {
+                if (winner != null) {
+                    winner.addScore(1);
+                    if (winner.getScore() >= maxWins) {
+                        gameOver = true;
+
+                        BattleScreen.this.matchStatus.setText(winner.getName() + " won the best of " + maxWins + "! Press space to continue...");
+                        KeyListener keyListener = new KeyListener() {
+                            @Override
+                            public void keyTyped(KeyEvent e) {
+                            }
+
+                            @Override
+                            public void keyPressed(KeyEvent e) {
+                            }
+
+                            @Override
+                            public void keyReleased(KeyEvent e) {
+                                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                                    for (GameOverListener gameOverListener : gameOverListeners) {
+                                        gameOverListener.gameOver(winner);
+                                    }
+                                    BattleScreen.super.removeKeyListener(this);
+                                }
+                            }
+                        };
+                        BattleScreen.super.addKeyListener(keyListener);
+
+                        return;
+                    }
                     roundStartMusic.start();
-                }
-                for (int i = 3; i > 0; i--) {
-                    if (gameOver) {
-                        BattleScreen.this.matchStatus.setText(winner.getName() + " won the best of " + maxWins + "! Game over in " + i + "...");
-                    } else {
+                    for (int i = 3; i > 0; i--) {
                         BattleScreen.this.matchStatus.setText(winner.getName() + " wins! New round in " + i + "...");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                } else {
+                    roundStartMusic.start();
+                    for (int i = 3; i > 0; i--) {
+                        BattleScreen.this.matchStatus.setText("Tie! New round in " + i + "...");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-
-                if (gameOver) {
-                    BattleScreen.this.matchStatus.setText("Game over!" + winner.getName() + " wins!");
-                    for (GameOverListener gameOverListener : gameOverListeners) {
-                        gameOverListener.gameOver(winner);
-                    }
-                }
-            } else {
-                roundStartMusic.start();
-                for (int i = 3; i > 0; i--) {
-                    BattleScreen.this.matchStatus.setText("Tie! New round in " + i + "...");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if (gameOver) {
-                return;
             }
 
             BattleScreen.this.arena.reset();
