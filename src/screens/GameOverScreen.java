@@ -19,7 +19,7 @@ public class GameOverScreen extends JPanel {
         super.setLayout(new GridBagLayout());
 
         this.message = new JLabel(message);
-        this.message.setFont(Const.DEFAULT_FONT.deriveFont(20f));
+        this.message.setFont(Const.DEFAULT_FONT.deriveFont(50f));
         this.playAgainButton = new JButton("Play Again");
         this.returnButton = new JButton("Return to Menu");
 

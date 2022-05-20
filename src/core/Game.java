@@ -105,7 +105,7 @@ public class Game extends JFrame {
             @Override
             public void gameOver(Player winner) {
                 Game.this.removeUpdatable(battleScreen);
-                Game.this.changeScreen(battleScreen, Game.this.createGameOverScreen());
+                Game.this.changeScreen(battleScreen, Game.this.createGameOverScreen(winner.getName() + " won!"));
             }
         });
         this.addUpdatable(battleScreen);
@@ -113,13 +113,13 @@ public class Game extends JFrame {
         return battleScreen;
     }
 
-    private GameOverScreen createGameOverScreen() {
-        GameOverScreen gameOverScreen = new GameOverScreen("Player 1 Wins!");
+    private GameOverScreen createGameOverScreen(String message) {
+        GameOverScreen gameOverScreen = new GameOverScreen(message);
 
         gameOverScreen.addPlayAgainButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Game.this.changeScreen(gameOverScreen, createBattleScreen());
+                Game.this.changeScreen(gameOverScreen, Game.this.createBattleScreen());
             }
         });
         gameOverScreen.addReturnButtonListener(new ActionListener() {

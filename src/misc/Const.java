@@ -22,5 +22,5 @@ public class Const {
             KeyEvent.VK_LEFT,
             KeyEvent.VK_RIGHT);
     public static final Font DEFAULT_FONT = new Font("Calibri", Font.PLAIN, 12);
-    public static final int MAX_WINS = 1;
+    public static final int MAX_WINS = 3;
 }
