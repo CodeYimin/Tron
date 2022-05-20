@@ -8,7 +8,7 @@ import player.PlayerControls;
 public class Const {
     public static final int DEFAULT_WINDOW_WIDTH = 800;
     public static final int DEFAULT_WINDOW_HEIGHT = 600;
-    public static final WidthHeight DEFAULT_ARENA_SIZE = new WidthHeight(150, 100);
+    public static final WidthHeight DEFAULT_ARENA_SIZE = new WidthHeight(250, 100);
     public static final int DEFAULT_FPS = 30;
     public static final PlayerControls DEFAULT_PLAYER_ONE_CONTROLS = new PlayerControls(
             KeyEvent.VK_W,

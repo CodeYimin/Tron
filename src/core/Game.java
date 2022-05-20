@@ -11,7 +11,7 @@ import javax.swing.event.ChangeListener;
 
 import misc.Const;
 import misc.WidthHeight;
-import screens.GameScreen;
+import screens.BattleScreen;
 import screens.MenuScreen;
 
 public class Game extends JFrame {
@@ -31,7 +31,7 @@ public class Game extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Game.super.setVisible(false);
                 Game.super.remove(menuScreen);
-                GameScreen gameScreen = new GameScreen(arenaSize);
+                BattleScreen gameScreen = new BattleScreen(arenaSize);
                 Game.this.addUpdatable(gameScreen);
                 Game.super.add(gameScreen);
                 Game.super.setVisible(true);

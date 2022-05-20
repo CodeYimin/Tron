@@ -18,6 +18,7 @@ public class Player implements KeyListener {
     private Arena arena;
     private PlayerControls controls;
     private Color color;
+    private String name;
 
     // State variables
     private int score;
@@ -32,6 +33,10 @@ public class Player implements KeyListener {
     private XY prevHeadVelocity;
 
     // Getters and setters
+    public String getName() {
+        return this.name;
+    }
+
     public XY getHeadPosition() {
         return this.headPosition;
     }
@@ -85,7 +90,8 @@ public class Player implements KeyListener {
         this.score += amount;
     }
 
-    public Player(Arena arena, XY defaultHeadPosition, XY defaultHeadVelocity, PlayerControls defaultControls, Color color) {
+    public Player(String name, Arena arena, XY defaultHeadPosition, XY defaultHeadVelocity, PlayerControls defaultControls, Color color) {
+        this.name = name;
         this.arena = arena;
         this.defaultHeadPosition = defaultHeadPosition;
         this.defaultHeadVelocity = defaultHeadVelocity;

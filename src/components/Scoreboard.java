@@ -6,18 +6,17 @@ import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import player.Player;
 
-public class Scoreboard extends Box {
+public class Scoreboard extends JPanel {
     private ArrayList<PlayerScore> playerScores = new ArrayList<>();
 
     public Scoreboard() {
-        super(BoxLayout.X_AXIS);
+        super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     }
 
     public void addPlayer(Player player) {
@@ -26,8 +25,9 @@ public class Scoreboard extends Box {
         super.add(playerScore);
     }
 
-    public void update() {
-        super.setPreferredSize(new Dimension(0, super.getParent().getHeight() / 8));
+    @Override
+    public void paintComponent(Graphics g) {
+        super.setPreferredSize(new Dimension(300, super.getParent().getHeight() / 8));
     }
 
     private static class PlayerScore extends JPanel {
