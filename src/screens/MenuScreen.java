@@ -16,7 +16,6 @@ import components.Slider;
 import misc.Const;
 
 public class MenuScreen extends JPanel {
-    public static final String TITLE = "TRON";
     JLabel title;
     JButton playButton;
     Slider speedSlider;
@@ -73,12 +72,12 @@ public class MenuScreen extends JPanel {
     }
 
     private void updateTitleSize() {
-        if (this.title == null) {
+        if (this.title == null || this.title.getText().length() == 0) {
             return;
         }
 
-        int fontSize = Math.min(super.getWidth() / MenuScreen.TITLE.length(), super.getHeight() / 3);
-        this.title.setFont(new Font("Calibri", Font.BOLD, fontSize));
+        float fontSize = Math.min(super.getWidth() / this.title.getText().length(), super.getHeight() / 3);
+        this.title.setFont(Const.DEFAULT_FONT.deriveFont(fontSize).deriveFont(Font.BOLD));
     }
 
     private void updateButtonSize() {
@@ -86,7 +85,7 @@ public class MenuScreen extends JPanel {
             return;
         }
 
-        float fontSize = Math.min(super.getWidth() / MenuScreen.TITLE.length(), super.getHeight() / 8);
+        float fontSize = Math.min(super.getWidth() / this.playButton.getText().length(), super.getHeight() / 8);
         this.playButton.setFont(Const.DEFAULT_FONT.deriveFont(fontSize));
     }
 
