@@ -35,6 +35,14 @@ public class Music {
         this.music.start();
     }
 
+    public void stop() {
+        if (this.music == null) {
+            return;
+        }
+
+        this.music.stop();
+    }
+
     public void loop() {
         if (this.music == null) {
             return;

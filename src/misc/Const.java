@@ -23,4 +23,8 @@ public class Const {
             KeyEvent.VK_RIGHT);
     public static final Font DEFAULT_FONT = new Font("Calibri", Font.PLAIN, 12);
     public static final int MAX_WINS = 3;
+    public static final String BACKGROUND_MUSIC = "../assets/audio/background.wav";
+    public static final String BATTLE_MUSIC = "../assets/audio/battle.wav";
+    public static final String ROUND_OVER_MUSIC = "../assets/audio/round_over.wav";
+    public static final String ROUND_START_MUSIC = "../assets/audio/round_start.wav";
 }

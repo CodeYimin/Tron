@@ -32,10 +32,6 @@ public class Game extends JFrame {
         MenuScreen menuScreen = this.createMenuScreen();
         super.add(menuScreen);
 
-        music = new Music("../assets/audio/Music.wav");
-        music.start();
-        music.loop();
-
         super.setVisible(true);
         this.startLoop();
     }

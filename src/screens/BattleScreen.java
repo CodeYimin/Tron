@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.JPanel;
 
+import audio.Music;
 import components.Arena;
 import components.MatchStatus;
 import components.Scoreboard;
@@ -26,6 +27,7 @@ public class BattleScreen extends JPanel implements Updatable {
     private ArrayList<Player> players = new ArrayList<>();
     private int maxWins;
     private ArrayList<GameOverListener> gameOverListeners = new ArrayList<>();
+    private Music music;
 
     public BattleScreen(WidthHeight arenaSize, int maxWins) {
         super.setLayout(new GridBagLayout());
@@ -75,6 +77,9 @@ public class BattleScreen extends JPanel implements Updatable {
         this.addPlayer(player1);
         this.addPlayer(player2);
 
+        this.music = new Music(Const.BATTLE_MUSIC);
+        this.music.start();
+
         this.arena.addMatchEndListener(new MatchEndListener());
     }
 
@@ -96,11 +101,17 @@ public class BattleScreen extends JPanel implements Updatable {
 
     private class MatchEndListener implements Arena.MatchEndListener {
         public void matchEnded(Player winner) {
-            boolean gameOver = false;
+            Music roundOverMusic = new Music(Const.ROUND_OVER_MUSIC);
+            Music roundStartMusic = new Music(Const.ROUND_START_MUSIC);
+            roundOverMusic.start();
 
+            boolean gameOver = false;
             if (winner != null) {
                 winner.addScore(1);
                 gameOver = winner.getScore() >= maxWins;
+                if (!gameOver) {
+                    roundStartMusic.start();
+                }
                 for (int i = 3; i > 0; i--) {
                     if (gameOver) {
                         BattleScreen.this.matchStatus.setText(winner.getName() + " won the best of " + maxWins + "! Game over in " + i + "...");
@@ -122,6 +133,7 @@ public class BattleScreen extends JPanel implements Updatable {
                     }
                 }
             } else {
+                roundStartMusic.start();
                 for (int i = 3; i > 0; i--) {
                     BattleScreen.this.matchStatus.setText("Tie! New round in " + i + "...");
                     try {
@@ -133,6 +145,7 @@ public class BattleScreen extends JPanel implements Updatable {
             }
 
             if (gameOver) {
+                BattleScreen.this.music.stop();
                 return;
             }
 
