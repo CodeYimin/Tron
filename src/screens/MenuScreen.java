@@ -109,6 +109,7 @@ public class MenuScreen extends Screen {
         this.music = new Music(Const.BACKGROUND_MUSIC);
         this.music.setStartSeconds(3);
         this.music.start();
+        this.music.loop();
     }
 
     @Override

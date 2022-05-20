@@ -104,7 +104,8 @@ public class BattleScreen extends Screen implements Updatable, Arena.MatchEndLis
     @Override
     public void onEnter() {
         this.music = new Music(Const.BATTLE_MUSIC);
-        music.start();
+        this.music.start();
+        this.music.loop();
     }
 
     @Override
