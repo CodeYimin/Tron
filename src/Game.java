@@ -1,4 +1,4 @@
-package core;
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +9,8 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import core.Screen;
+import core.Updatable;
 import misc.Const;
 import misc.WidthHeight;
 import player.Player;
